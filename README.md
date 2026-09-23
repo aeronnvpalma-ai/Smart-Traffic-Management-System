@@ -4,14 +4,23 @@ A browser-based smart traffic operations dashboard.
 
 ## Features
 
-- Dashboard for traffic operations, roads, signals, incidents, and reports.
-- **Live Traffic Map** at [`live-map.html`](live-map.html), powered by Leaflet and OpenStreetMap tiles.
-- Color-coded road corridors for free-flowing, moderate, and congested traffic.
-- Road popups with area, speed, and condition details.
-- Condition filtering, simulated live refresh, average speed metrics, incident counts, and browser geolocation.
+- Existing operations dashboard in `index.html`.
+- Live traffic map in `live-map.html`, powered by Leaflet and OpenStreetMap tiles.
+- Role-based demo portal in `traffic-portal.html` with Administrator, Traffic Officer, and Viewer roles.
+- Best Route planner that compares possible routes using current simulated traffic levels.
+
+## Demo roles
+
+Open `traffic-portal.html` and use password `1234`:
+
+| Username | Role | Permissions |
+| --- | --- | --- |
+| `admin` | Administrator | Manage users, roads, signals, and view reports |
+| `officer` | Traffic Officer | Monitor traffic, report incidents, and update incident status |
+| `viewer` | Viewer | Access dashboard, traffic monitoring, and reports |
 
 ## Run locally
 
-Open `index.html` for the existing dashboard or open `live-map.html` directly. Because the map uses external Leaflet and OpenStreetMap resources, an internet connection is required for map tiles and the map library.
+Open `index.html`, `live-map.html`, or `traffic-portal.html` in a browser. The live map requires an internet connection for Leaflet and OpenStreetMap resources.
 
-> The traffic values in this static HTML demo are simulated. Connect the refresh logic to a traffic provider or backend API for production real-time data.
+> The role accounts, route values, and traffic values are front-end demo data. A production deployment should authenticate against a backend and obtain route/traffic data from a real provider.
