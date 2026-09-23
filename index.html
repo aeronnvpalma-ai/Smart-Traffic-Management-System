@@ -34,8 +34,6 @@
       width:100%; height:40px; border:1px solid var(--line); border-radius:10px; background:#fff; padding:0 12px; font:inherit;
     }
     .primary { background: var(--blue); color:#fff; border-color: var(--blue); cursor:pointer; }
-    .demo { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:18px; }
-    .demo button { font-size:11px; padding:8px 4px; cursor:pointer; }
     .alert { color:#b91c1c; font-size:12px; margin-top:8px; }
 
     .shell {
@@ -123,7 +121,6 @@
       .route-form { grid-template-columns:1fr; }
       .top { flex-direction:column; align-items:flex-start; }
       .user { text-align:left; }
-      .demo { grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -136,21 +133,15 @@
 
       <div class="field">
         <label for="username">Username</label>
-        <input id="username" required maxlength="25" placeholder="admin, officer, or viewer">
+        <input id="username" required maxlength="25" placeholder="Enter username">
       </div>
 
       <div class="field">
         <label for="password">Password</label>
-        <input id="password" type="password" required maxlength="25" placeholder="Demo password: 1234">
+        <input id="password" type="password" required maxlength="25" placeholder="Enter password">
       </div>
 
       <button class="field primary" type="submit">Sign in</button>
-
-      <div class="demo">
-        <button type="button" data-user="admin">Administrator</button>
-        <button type="button" data-user="officer">Traffic Officer</button>
-        <button type="button" data-user="viewer">Viewer</button>
-      </div>
 
       <p id="loginError" class="alert center"></p>
     </form>
@@ -339,20 +330,13 @@
 
     const $ = (selector) => document.querySelector(selector);
 
-    document.querySelectorAll('[data-user]').forEach((button) => {
-      button.addEventListener('click', () => {
-        $('#username').value = button.dataset.user;
-        $('#password').value = '1234';
-      });
-    });
-
     $('#loginForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const key = $('#username').value.trim().toLowerCase();
       const user = users[key];
 
       if (!user || user.password !== $('#password').value.trim()) {
-        $('#loginError').textContent = 'Invalid demo credentials. Use a role button or password 1234.';
+        $('#loginError').textContent = 'Invalid credentials. Please enter a valid username and password.';
         return;
       }
 
