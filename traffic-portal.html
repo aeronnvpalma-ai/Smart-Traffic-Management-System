@@ -1,14 +1,249 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Smart Traffic Portal</title>
-<style>
-:root{--navy:#0f172a;--blue:#2563eb;--bg:#f1f5f9;--line:#e2e8f0;--muted:#64748b;--green:#10b981;--amber:#f59e0b;--red:#ef4444}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:#1e293b}.hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 15% 15%,#dbeafe,transparent 35%),var(--bg)}.login-card,.card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px #0f172a12}.login-card{width:min(430px,100%);padding:30px}.logo{font-size:42px;text-align:center}.login-card h1{text-align:center;margin:8px 0 4px}.muted{color:var(--muted);font-size:13px}.center{text-align:center}.field{margin-top:17px}.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}.field input,.field select,.field button,.btn{width:100%;height:40px;border:1px solid var(--line);border-radius:8px;padding:0 12px;font:inherit;background:#fff}.primary{background:var(--blue)!important;color:white;border-color:var(--blue)!important;cursor:pointer}.demo{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:18px}.demo button{height:auto;padding:8px 4px;font-size:11px;cursor:pointer}.shell{display:grid;grid-template-columns:245px 1fr;min-height:100vh}.side{padding:22px 15px;background:linear-gradient(180deg,var(--navy),#111827);color:white}.brand{font-weight:700;font-size:17px;margin-bottom:35px}.brand small{display:block;color:#94a3b8;font-size:11px;margin-top:3px}.nav button{display:block;width:100%;text-align:left;padding:12px;border:0;border-radius:8px;background:transparent;color:#cbd5e1;font:inherit;cursor:pointer;margin:4px 0}.nav button:hover,.nav button.active{background:var(--blue);color:white}.main{min-width:0}.top{display:flex;justify-content:space-between;align-items:center;padding:23px 30px;background:#fff;border-bottom:1px solid var(--line)}.top h1{margin:0;font-size:24px}.user{font-size:13px;text-align:right}.content{padding:25px 30px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card{padding:20px}.card h2{margin:0 0 5px;font-size:17px}.metric{font-size:26px;font-weight:700;margin-top:10px}.route-form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin:18px 0}.route-form label{display:block;font-size:12px;font-weight:600;margin-bottom:6px}.route-form select,.route-form button{height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:#fff;font:inherit}.route-form button{background:var(--blue);border-color:var(--blue);color:#fff;cursor:pointer}.route-result{margin-top:15px;border-left:4px solid var(--green);background:#ecfdf5;padding:15px;border-radius:8px}.route-result strong{font-size:16px}.route-result p{margin:6px 0 0;color:#475569;font-size:13px}.badge{display:inline-block;padding:4px 8px;border-radius:99px;font-size:11px;font-weight:700}.green{background:#d1fae5;color:#047857}.amber{background:#fef3c7;color:#b45309}.red{background:#fee2e2;color:#b91c1c}.section{display:none}.section.active{display:block}.permission{margin-top:15px;padding:12px;border-radius:8px;background:#f8fafc;font-size:13px}@media(max-width:760px){.shell{display:block}.side{padding:15px}.brand{margin-bottom:12px}.nav{display:flex;overflow:auto;gap:5px}.nav button{white-space:nowrap}.top,.content{padding:18px}.grid{grid-template-columns:1fr}.route-form{grid-template-columns:1fr}.top{align-items:flex-start;gap:12px}}
-</style></head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Traffic Portal</title>
+  <style>
+    :root{--navy:#0f172a;--blue:#2563eb;--bg:#f1f5f9;--line:#e2e8f0;--muted:#64748b;--green:#10b981;--amber:#f59e0b;--red:#ef4444}
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:#1e293b}.hidden{display:none!important}
+    .login{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 15% 15%,#dbeafe,transparent 35%),var(--bg)}
+    .login-card,.card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px #0f172a12}
+    .login-card{width:min(430px,100%);padding:30px}.logo{font-size:42px;text-align:center}.login-card h1{text-align:center;margin:8px 0 4px}.muted{color:var(--muted);font-size:13px}.center{text-align:center}.field{margin-top:17px}.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}.field input,.field select,.field button,.btn{width:100%;height:40px;border:1px solid var(--line);border-radius:8px;padding:0 12px;font:inherit;background:#fff}.primary{background:var(--blue)!important;color:white;border-color:var(--blue)!important;cursor:pointer}.demo{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:18px}.demo button{height:auto;padding:8px 4px;font-size:11px;cursor:pointer}.shell{display:grid;grid-template-columns:245px 1fr;min-height:100vh}.side{padding:22px 15px;background:linear-gradient(180deg,var(--navy),#111827);color:white}.brand{font-weight:700;font-size:17px;margin-bottom:35px}.brand small{display:block;color:#94a3b8;font-size:11px;margin-top:3px}.nav button{display:block;width:100%;text-align:left;padding:12px;border:0;border-radius:8px;background:transparent;color:#cbd5e1;font:inherit;cursor:pointer;margin:4px 0}.nav button:hover,.nav button.active{background:var(--blue);color:white}.main{min-width:0}.top{display:flex;justify-content:space-between;align-items:center;padding:23px 30px;background:#fff;border-bottom:1px solid var(--line)}.top h1{margin:0;font-size:24px}.user{font-size:13px;text-align:right}.content{padding:25px 30px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card{padding:20px}.card h2{margin:0 0 5px;font-size:17px}.metric{font-size:26px;font-weight:700;margin-top:10px}.route-form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin:18px 0}.route-form label{display:block;font-size:12px;font-weight:600;margin-bottom:6px}.route-form select,.route-form button{height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:#fff;font:inherit}.route-form button{background:var(--blue);border-color:var(--blue);color:#fff;cursor:pointer}.route-result{margin-top:15px;border-left:4px solid var(--green);background:#ecfdf5;padding:15px;border-radius:8px}.route-result strong{font-size:16px}.route-result p{margin:6px 0 0;color:#475569;font-size:13px}.badge{display:inline-block;padding:4px 8px;border-radius:99px;font-size:11px;font-weight:700}.green{background:#d1fae5;color:#047857}.amber{background:#fef3c7;color:#b45309}.red{background:#fee2e2;color:#b91c1c}.section{display:none}.section.active{display:block}.permission{margin-top:15px;padding:12px;border-radius:8px;background:#f8fafc;font-size:13px}.alert{color:#b91c1c;font-size:12px;margin-top:8px}.status-strip{margin-top:10px;padding:10px 12px;border-radius:8px;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:600}@media(max-width:760px){.shell{display:block}.side{padding:15px}.brand{margin-bottom:12px}.nav{display:flex;overflow:auto;gap:5px}.nav button{white-space:nowrap}.top,.content{padding:18px}.grid{grid-template-columns:1fr}.route-form{grid-template-columns:1fr}.top{align-items:flex-start;gap:12px}}
+  </style>
+</head>
 <body>
-<section id="login" class="login"><form id="loginForm" class="login-card"><div class="logo">🚦</div><h1>Smart Traffic Portal</h1><p class="muted center">Sign in with your assigned role</p><div class="field"><label for="username">Username</label><input id="username" required maxlength="25" placeholder="admin, officer, or viewer"></div><div class="field"><label for="password">Password</label><input id="password" type="password" required maxlength="25" placeholder="Demo password: 1234"></div><button class="field primary" type="submit">Sign in</button><div class="demo"><button type="button" data-user="admin">Administrator</button><button type="button" data-user="officer">Traffic Officer</button><button type="button" data-user="viewer">Viewer</button></div><p id="loginError" class="muted center"></p></form></section>
-<div id="app" class="shell hidden"><aside class="side"><div class="brand">🚦 Smart Traffic<small>Role-based operations portal</small></div><nav class="nav"><button class="active" data-section="overview">Overview</button><button data-section="routes">Best Route</button><button data-section="roads">Traffic Monitoring</button><button data-section="reports">Reports</button></nav></aside><main class="main"><header class="top"><div><h1 id="title">Operations Overview</h1><p class="muted">Traffic conditions updated from the monitoring network</p></div><div class="user"><strong id="userName"></strong><br><span id="roleName" class="muted"></span></div></header><div class="content"><section id="overview" class="section active"><div class="grid"><div class="card"><span class="muted">Active vehicles</span><div class="metric">2,486</div></div><div class="card"><span class="muted">Average network speed</span><div class="metric">34 km/h</div></div><div class="card"><span class="muted">Active incidents</span><div class="metric">2</div></div></div><div class="card permission"><strong>Role permissions</strong><p id="permissions" class="muted"></p></div></section><section id="routes" class="section"><div class="card"><h2>Route / Best Route</h2><p class="muted">Compare possible routes using current simulated traffic levels.</p><form id="routeForm" class="route-form"><div><label for="from">From</label><select id="from"><option>City Hall</option><option>Airport</option><option>Central Market</option></select></div><div><label for="to">To</label><select id="to"><option>Airport</option><option>City Hall</option><option>University</option></select></div><button>Find best route</button></form><div id="routeResult" class="route-result"><strong>Recommended route will appear here</strong><p>Select a starting point and destination to compare routes.</p></div></div></section><section id="roads" class="section"><div class="card"><h2>Traffic Monitoring</h2><p class="muted">Main Street <span class="badge green">Free flowing · 38 km/h</span></p><p class="muted">North Avenue <span class="badge red">Congested · 18 km/h</span></p><p class="muted">Central Boulevard <span class="badge amber">Moderate · 27 km/h</span></p></div></section><section id="reports" class="section"><div class="card"><h2>Network Reports</h2><p class="muted">Daily network performance and incident summaries are available to authorized users.</p></div></section></div></main></div>
-<script>
-const users={admin:{name:'Administrator',password:'1234',permissions:'Manage users, roads, and signals; view reports.'},officer:{name:'Traffic Officer',password:'1234',permissions:'Monitor traffic, report incidents, and update incident status.'},viewer:{name:'Viewer',password:'1234',permissions:'Access the dashboard, traffic monitoring, and reports.'}};let current;
-const $=s=>document.querySelector(s);document.querySelectorAll('[data-user]').forEach(b=>b.onclick=()=>{$('#username').value=b.dataset.user;$('#password').value='1234'});$('#loginForm').onsubmit=e=>{e.preventDefault();const key=$('#username').value.trim().toLowerCase(),u=users[key];if(!u||u.password!==$('#password').value){$('#loginError').textContent='Invalid demo credentials. Use a role button or password 1234.';return}current=u;$('#login').classList.add('hidden');$('#app').classList.remove('hidden');$('#userName').textContent=u.name;$('#roleName').textContent=key.toUpperCase();$('#permissions').textContent=u.permissions};document.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===b.dataset.section));document.querySelectorAll('[data-section]').forEach(x=>x.classList.toggle('active',x===b));$('#title').textContent=b.textContent});$('#routeForm').onsubmit=e=>{e.preventDefault();const from=$('#from').value,to=$('#to').value;if(from===to){$('#routeResult').innerHTML='<strong>Choose different locations</strong><p>Your starting point and destination must be different.</p>';return}const routes=[{name:'Main Street → Central Boulevard',time:18,traffic:'Free flowing',status:'green'},{name:'North Avenue → East Ring Road',time:24,traffic:'Moderate',status:'amber'},{name:'Market Link → Riverside Drive',time:31,traffic:'Congested',status:'red'}];const best=routes[Math.floor(Math.random()*2)];$('#routeResult').innerHTML=`<strong>Best route: ${best.name}</strong><p>Estimated travel time: ${best.time} minutes · Current traffic: <span class="badge ${best.status}">${best.traffic}</span></p>`};
-</script></body></html>
+  <section id="login" class="login">
+    <form id="loginForm" class="login-card">
+      <div class="logo">🚦</div>
+      <h1>Smart Traffic Portal</h1>
+      <p class="muted center">Sign in with your assigned role</p>
+
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" required maxlength="25" placeholder="admin, officer, or viewer">
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" required maxlength="25" placeholder="Demo password: 1234">
+      </div>
+
+      <button class="field primary" type="submit">Sign in</button>
+
+      <div class="demo">
+        <button type="button" data-user="admin">Administrator</button>
+        <button type="button" data-user="officer">Traffic Officer</button>
+        <button type="button" data-user="viewer">Viewer</button>
+      </div>
+
+      <p id="loginError" class="alert center"></p>
+    </form>
+  </section>
+
+  <div id="app" class="shell hidden">
+    <aside class="side">
+      <div class="brand">🚦 Smart Traffic<small>Role-based operations portal</small></div>
+      <nav class="nav">
+        <button class="active" data-section="overview">Overview</button>
+        <button data-section="routes">Best Route</button>
+        <button data-section="roads">Traffic Monitoring</button>
+        <button data-section="reports">Reports</button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="top">
+        <div>
+          <h1 id="title">Operations Overview</h1>
+          <p class="muted">Traffic conditions updated from the monitoring network</p>
+        </div>
+        <div class="user">
+          <strong id="userName"></strong><br>
+          <span id="roleName" class="muted"></span>
+        </div>
+      </header>
+
+      <div class="content">
+        <section id="overview" class="section active">
+          <div class="grid">
+            <div class="card">
+              <span class="muted">Active vehicles</span>
+              <div class="metric">2,486</div>
+            </div>
+            <div class="card">
+              <span class="muted">Average network speed</span>
+              <div class="metric">34 km/h</div>
+            </div>
+            <div class="card">
+              <span class="muted">Active incidents</span>
+              <div class="metric">2</div>
+            </div>
+          </div>
+
+          <div class="card permission">
+            <strong>Role permissions</strong>
+            <p id="permissions" class="muted"></p>
+          </div>
+        </section>
+
+        <section id="routes" class="section">
+          <div class="card">
+            <h2>Route / Best Route</h2>
+            <p class="muted">Compare possible routes using the current simulated traffic conditions.</p>
+
+            <form id="routeForm" class="route-form">
+              <div>
+                <label for="from">From</label>
+                <select id="from">
+                  <option>City Hall</option>
+                  <option>Airport</option>
+                  <option>Central Market</option>
+                  <option>University</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="to">To</label>
+                <select id="to">
+                  <option>Airport</option>
+                  <option>City Hall</option>
+                  <option>Central Market</option>
+                  <option>University</option>
+                </select>
+              </div>
+
+              <button type="submit">Find best route</button>
+            </form>
+
+            <div id="routeResult" class="route-result">
+              <strong>Recommended route will appear here</strong>
+              <p>Select a route to compare travel time and current congestion.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="roads" class="section">
+          <div class="card">
+            <h2>Traffic Monitoring</h2>
+            <p class="muted">Main Street <span class="badge green">Free flowing · 38 km/h</span></p>
+            <p class="muted">North Avenue <span class="badge red">Congested · 18 km/h</span></p>
+            <p class="muted">Central Boulevard <span class="badge amber">Moderate · 27 km/h</span></p>
+          </div>
+        </section>
+
+        <section id="reports" class="section">
+          <div class="card">
+            <h2>Network Reports</h2>
+            <p class="muted">Daily network performance and incident summaries are available to authorized users.</p>
+            <div class="status-strip">Role visibility: <span id="reportAccess">Authorized</span></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const users = {
+      admin: {
+        name: 'Administrator',
+        password: '1234',
+        permissions: 'Manage users, roads, and signals; view reports.'
+      },
+      officer: {
+        name: 'Traffic Officer',
+        password: '1234',
+        permissions: 'Monitor traffic, report incidents, and update incident status.'
+      },
+      viewer: {
+        name: 'Viewer',
+        password: '1234',
+        permissions: 'Access the dashboard, traffic monitoring, and reports.'
+      }
+    };
+
+    const routeOptions = [
+      { name: 'Central Boulevard → Airport Road', from: 'City Hall', to: 'Airport', travelMinutes: 18, condition: 'green', label: 'Free flowing' },
+      { name: 'North Avenue → East Ring Road', from: 'City Hall', to: 'Airport', travelMinutes: 24, condition: 'amber', label: 'Moderate' },
+      { name: 'Market Link → Riverside Drive', from: 'City Hall', to: 'Airport', travelMinutes: 31, condition: 'red', label: 'Congested' },
+      { name: 'Harbor Route → Main Street', from: 'Central Market', to: 'University', travelMinutes: 15, condition: 'green', label: 'Free flowing' },
+      { name: 'Airport Road → North Avenue', from: 'Airport', to: 'University', travelMinutes: 26, condition: 'amber', label: 'Moderate' },
+      { name: 'Market Link → Central Boulevard', from: 'Central Market', to: 'City Hall', travelMinutes: 29, condition: 'red', label: 'Congested' }
+    ];
+
+    const $ = (selector) => document.querySelector(selector);
+
+    document.querySelectorAll('[data-user]').forEach((button) => {
+      button.addEventListener('click', () => {
+        $('#username').value = button.dataset.user;
+        $('#password').value = '1234';
+      });
+    });
+
+    $('#loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const key = $('#username').value.trim().toLowerCase();
+      const user = users[key];
+
+      if (!user || user.password !== $('#password').value.trim()) {
+        $('#loginError').textContent = 'Invalid demo credentials. Use a role button or password 1234.';
+        return;
+      }
+
+      $('#login').classList.add('hidden');
+      $('#app').classList.remove('hidden');
+      $('#userName').textContent = user.name;
+      $('#roleName').textContent = key.toUpperCase();
+      $('#permissions').textContent = user.permissions;
+
+      if (key === 'viewer') {
+        $('#reportAccess').textContent = 'Read-only';
+      } else if (key === 'officer') {
+        $('#reportAccess').textContent = 'Officer access';
+      } else {
+        $('#reportAccess').textContent = 'Full access';
+      }
+    });
+
+    document.querySelectorAll('[data-section]').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.section').forEach((section) => {
+          section.classList.toggle('active', section.id === button.dataset.section);
+        });
+
+        document.querySelectorAll('[data-section]').forEach((navBtn) => {
+          navBtn.classList.toggle('active', navBtn === button);
+        });
+
+        $('#title').textContent = button.textContent;
+      });
+    });
+
+    $('#routeForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const from = $('#from').value;
+      const to = $('#to').value;
+
+      if (from === to) {
+        $('#routeResult').innerHTML = '<strong>Choose different locations</strong><p>Your origin and destination must be different.</p>';
+        return;
+      }
+
+      const matching = routeOptions.filter((route) => route.from === from && route.to === to);
+      const fallback = routeOptions.filter((route) => route.from === from || route.to === to);
+      const candidates = matching.length ? matching : fallback;
+      const best = candidates.reduce((bestRoute, route) => {
+        const severityWeight = route.condition === 'green' ? 1 : route.condition === 'amber' ? 2 : 3;
+        const score = route.travelMinutes + (severityWeight * 10);
+        const bestScore = bestRoute ? bestRoute.travelMinutes + (bestRoute.condition === 'green' ? 10 : bestRoute.condition === 'amber' ? 20 : 30) : Infinity;
+        return score < bestScore ? route : bestRoute;
+      }, null) || candidates[0];
+
+      $('#routeResult').innerHTML = `
+        <strong>Best route: ${best.name}</strong>
+        <p>Estimated travel time: ${best.travelMinutes} minutes · Current traffic: <span class="badge ${best.condition}">${best.label}</span></p>
+      `;
+    });
+  </script>
+</body>
+</html>

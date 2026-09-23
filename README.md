@@ -1,26 +1,42 @@
 # Smart-Traffic-Management-System
 
-A browser-based smart traffic operations dashboard.
+A browser-based smart traffic operations dashboard for a city mobility control center.
 
-## Features
+## Included features
 
-- Existing operations dashboard in `index.html`.
-- Live traffic map in `live-map.html`, powered by Leaflet and OpenStreetMap tiles.
-- Role-based demo portal in `traffic-portal.html` with Administrator, Traffic Officer, and Viewer roles.
-- Best Route planner that compares possible routes using current simulated traffic levels.
+- Operations dashboard in `index.html`
+- Interactive live traffic map in `live-map.html`
+- Role-based traffic portal in `traffic-portal.html`
+- Best-route planner based on current simulated traffic conditions
 
 ## Demo roles
 
-Open `traffic-portal.html` and use password `1234`:
+Open `traffic-portal.html` in a browser and sign in with one of the demo users below.
 
-| Username | Role | Permissions |
-| --- | --- | --- |
-| `admin` | Administrator | Manage users, roads, signals, and view reports |
-| `officer` | Traffic Officer | Monitor traffic, report incidents, and update incident status |
-| `viewer` | Viewer | Access dashboard, traffic monitoring, and reports |
+- Username: `admin` | Password: `1234`
+  - Administrator
+  - Manage users, roads, signals, and reports
+- Username: `officer` | Password: `1234`
+  - Traffic Officer
+  - Monitor traffic, report incidents, and update incident status
+- Username: `viewer` | Password: `1234`
+  - Viewer
+  - Access dashboard, traffic monitoring, and reports
+
+## Route / best-route feature
+
+The portal includes a route recommendation section that compares sample routes and chooses the route with the least traffic congestion and the shortest estimated travel time.
+
+## Live traffic map
+
+The live map page shows corridor lines on a map, with green, amber, and red conditions for free flow, moderate flow, and congestion. It includes a traffic filter and refresh button.
 
 ## Run locally
 
-Open `index.html`, `live-map.html`, or `traffic-portal.html` in a browser. The live map requires an internet connection for Leaflet and OpenStreetMap resources.
+Open any of these files directly in a browser:
 
-> The role accounts, route values, and traffic values are front-end demo data. A production deployment should authenticate against a backend and obtain route/traffic data from a real provider.
+- `index.html`
+- `live-map.html`
+- `traffic-portal.html`
+
+> These are static front-end demos. Production use would require a real backend authentication layer and traffic data source.

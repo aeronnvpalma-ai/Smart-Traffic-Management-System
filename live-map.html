@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Live traffic map for Smart Traffic Management System">
+  <title>Live Traffic Map | Smart Traffic</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    :root{--navy:#0f172a;--blue:#2563eb;--muted:#64748b;--line:#e2e8f0;--bg:#f1f5f9;--green:#10b981;--amber:#f59e0b;--red:#ef4444}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#1e293b;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}.sidebar{padding:24px 18px;background:linear-gradient(180deg,#0f172a,#111827);color:#fff}.brand{display:flex;gap:12px;align-items:center;margin-bottom:38px}.brand-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#2563eb;font-size:22px}.brand small{display:block;margin-top:3px;color:#94a3b8;font-size:11px}.nav a{display:block;padding:12px 14px;border-radius:9px;color:#cbd5e1;text-decoration:none;margin:5px 0}.nav a:hover,.nav a.active{background:#1d4ed8;color:white}.main{min-width:0}.header{display:flex;justify-content:space-between;align-items:center;padding:24px 32px;background:#fff;border-bottom:1px solid var(--line)}h1{margin:0;font-size:25px}.subtitle{margin:5px 0 0;color:var(--muted);font-size:13px}.status{display:flex;align-items:center;gap:8px;color:#047857;font-size:13px;font-weight:600}.pulse{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px #d1fae5}.content{padding:24px 32px}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.btn,.select{height:38px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 13px;color:#334155;font:inherit;cursor:pointer}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.map-card{overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px #0f172a0a}.map-wrap{height:calc(100vh - 230px);min-height:480px;position:relative}.map{height:100%;width:100%}.legend{position:absolute;z-index:500;right:16px;bottom:16px;background:#fff;border-radius:10px;padding:12px 14px;box-shadow:0 3px 14px #0f172a26;font-size:12px}.legend strong{display:block;margin-bottom:8px}.legend-row{display:flex;align-items:center;gap:7px;margin:5px 0}.dot{width:11px;height:11px;border-radius:50%}.green{background:var(--green)}.amber{background:var(--amber)}.red{background:var(--red)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.stat{padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:10px}.stat small{display:block;color:var(--muted);font-size:11px}.stat strong{display:block;margin-top:5px;font-size:21px}.leaflet-popup-content-wrapper{border-radius:10px}.popup h3{margin:0 0 5px;font-size:14px}.popup p{margin:3px 0;color:#64748b;font-size:12px}.tag{display:inline-block;margin-top:6px;padding:3px 7px;border-radius:99px;font-size:11px;font-weight:700}.tag.green{background:#d1fae5;color:#047857}.tag.amber{background:#fef3c7;color:#b45309}.tag.red{background:#fee2e2;color:#b91c1c}@media(max-width:800px){.app{display:block}.sidebar{position:static;padding:14px}.brand{margin-bottom:12px}.nav{display:flex;gap:5px;overflow:auto}.nav a{white-space:nowrap}.header,.content{padding:18px}.map-wrap{height:65vh;min-height:420px}.stats{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">🚦</div>
+        <div><strong>Smart Traffic</strong><small>Management System</small></div>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Dashboard</a>
+        <a class="active" href="live-map.html">Live Traffic Map</a>
+        <a href="traffic-portal.html">Portal</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div>
+          <h1>Live Traffic Map</h1>
+          <p class="subtitle">Real-time network conditions and monitored corridors</p>
+        </div>
+        <div class="status"><span class="pulse"></span><span id="lastUpdated">Live · updating now</span></div>
+      </header>
+
+      <section class="content">
+        <div class="stats">
+          <div class="stat"><small>Monitored corridors</small><strong id="corridors">8</strong></div>
+          <div class="stat"><small>Average speed</small><strong id="speed">34 km/h</strong></div>
+          <div class="stat"><small>Active incidents</small><strong id="incidents">2</strong></div>
+        </div>
+
+        <div class="toolbar">
+          <select class="select" id="filter">
+            <option value="all">All conditions</option>
+            <option value="green">Free flowing</option>
+            <option value="amber">Moderate</option>
+            <option value="red">Congested</option>
+          </select>
+          <button class="btn" id="locate">⌖ Locate me</button>
+          <button class="btn primary" id="refresh">↻ Refresh data</button>
+        </div>
+
+        <div class="map-card">
+          <div class="map-wrap">
+            <div id="map" class="map"></div>
+            <div class="legend">
+              <strong>Traffic speed</strong>
+              <div class="legend-row"><i class="dot green"></i> Free flowing</div>
+              <div class="legend-row"><i class="dot amber"></i> Moderate</div>
+              <div class="legend-row"><i class="dot red"></i> Congested</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    const roads = [
+      {name:'Main Street', area:'Downtown', speed:38, condition:'green', coords:[[14.5995,120.9842],[14.6030,120.9910],[14.6065,120.9975]]},
+      {name:'North Avenue', area:'North District', speed:18, condition:'red', coords:[[14.6065,120.9975],[14.6145,120.9985],[14.6220,121.0000]]},
+      {name:'East Ring Road', area:'East District', speed:46, condition:'green', coords:[[14.6030,120.9910],[14.5955,121.0035],[14.5890,121.0120]]},
+      {name:'Central Boulevard', area:'Central District', speed:27, condition:'amber', coords:[[14.5995,120.9842],[14.5925,120.9840],[14.5840,120.9820]]},
+      {name:'Airport Road', area:'Airport District', speed:31, condition:'amber', coords:[[14.6220,121.0000],[14.6350,121.0120],[14.6480,121.0200]]},
+      {name:'Riverside Drive', area:'West District', speed:51, condition:'green', coords:[[14.5840,120.9820],[14.5750,120.9740],[14.5670,120.9690]]},
+      {name:'Market Link', area:'Market District', speed:20, condition:'red', coords:[[14.5925,120.9840],[14.5880,120.9920],[14.5840,121.0010]]},
+      {name:'Harbor Route', area:'South District', speed:42, condition:'green', coords:[[14.5670,120.9690],[14.5580,120.9750],[14.5480,120.9800]]}
+    ];
+
+    const colors = { green: '#10b981', amber: '#f59e0b', red: '#ef4444' };
+    let map, layers = [];
+
+    function renderData(filter='all') {
+      layers.forEach(layer => map.removeLayer(layer));
+      layers = [];
+
+      const visible = roads.filter(r => filter === 'all' || r.condition === filter);
+
+      visible.forEach(route => {
+        const line = L.polyline(route.coords, {
+          color: colors[route.condition],
+          weight: 7,
+          opacity: 0.9,
+          lineCap: 'round'
+        }).addTo(map);
+
+        line.bindPopup(`
+          <div class="popup">
+            <h3>${route.name}</h3>
+            <p>${route.area}</p>
+            <p>Average speed: <strong>${route.speed} km/h</strong></p>
+            <span class="tag ${route.condition}">${route.condition === 'green' ? 'Free flowing' : route.condition === 'amber' ? 'Moderate' : 'Congested'}</span>
+          </div>
+        `);
+
+        layers.push(line);
+
+        const marker = L.circleMarker(route.coords[Math.floor(route.coords.length / 2)], {
+          radius: 7,
+          fillColor: colors[route.condition],
+          color: '#fff',
+          weight: 2,
+          fillOpacity: 1
+        }).addTo(map);
+
+        marker.bindPopup(`<div class="popup"><h3>${route.name}</h3><p>Updated just now · ${route.speed} km/h</p></div>`);
+        layers.push(marker);
+      });
+
+      document.getElementById('corridors').textContent = visible.length;
+      const avg = visible.length ? Math.round(visible.reduce((sum, r) => sum + r.speed, 0) / visible.length) : 0;
+      document.getElementById('speed').textContent = `${avg} km/h`;
+      document.getElementById('incidents').textContent = roads.filter(r => r.condition === 'red').length;
+      document.getElementById('lastUpdated').textContent = 'Live · updated ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    map = L.map('map').setView([14.596, 120.991], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    renderData();
+
+    document.getElementById('filter').addEventListener('change', (e) => renderData(e.target.value));
+
+    document.getElementById('refresh').addEventListener('click', () => {
+      roads.forEach(route => {
+        const delta = (Math.random() - 0.5) * 10;
+        route.speed = Math.max(12, Math.min(55, route.speed + Math.round(delta)));
+        if (route.speed < 23) route.condition = 'red';
+        else if (route.speed < 34) route.condition = 'amber';
+        else route.condition = 'green';
+      });
+      renderData(document.getElementById('filter').value);
+    });
+
+    document.getElementById('locate').addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert('Location is not available in this browser.');
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          map.setView([latitude, longitude], 15);
+          L.marker([latitude, longitude]).addTo(map).bindPopup('Your current location').openPopup();
+        },
+        () => alert('Unable to access your location. Please check browser permissions.')
+      );
+    });
+
+    setInterval(() => renderData(document.getElementById('filter').value), 30000);
+  </script>
+</body>
+</html>
