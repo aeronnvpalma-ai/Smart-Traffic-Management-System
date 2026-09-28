@@ -31,8 +31,58 @@
 <section id="reports" class="section"><div class="card'><h2>Quezon City Reports</h2><p class='muted'>Daily traffic performance and incident summaries for Quezon City.</p><div class='status-strip'>Role visibility: <span id='reportAccess'>Authorized</span></div></div></section>
 </div></main></div>
 <button id="botToggle" class="bot-toggle" aria-label="Open Traffic Bot">💬</button><div id="bot" class="bot"><div class="bot-head"><span>QC Traffic Bot</span><button id="closeBot">×</button></div><div class="bot-body"></div></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script>
-const $ = (selector) => document.querySelector(selector);
-const users={admin:{name:'Administrator',password:'1234',permissions:'Manage Quezon City users, roads, signals, and reports.'},officer:{name:'Traffic Officer',password:'1234',permissions:'Monitor traffic,report incidents, and update incident status.'},viewer:{name:'Viewer',password:'1234',permissions:'Access the dashboard, traffic monitoring, and reports.'}};
-$('#loginForm').onsubmit=e=>{e.preventDefault();const key=$('#username').value.trim().toLowerCase(),u=users[key];if(!u||u.password!==$('#password').value.trim()){$('#loginError').textContent='Invalid demo credentials.';return;}$('#login').classList.add('hidden');$('#app').classList.remove('hidden');$('#userName').textContent=u.name;$('#role').textContent=key.toUpperCase();$('#permissions').textContent=u.permissions};
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+(function(){
+  const $ = (selector) => document.querySelector(selector);
+
+  try {
+    const users = {
+      admin: { name: 'Administrator', password: '1234', permissions: 'Manage Quezon City users, roads, signals, and reports.' },
+      officer: { name: 'Traffic Officer', password: '1234', permissions: 'Monitor traffic, report incidents, and update incident status.' },
+      viewer: { name: 'Viewer', password: '1234', permissions: 'Access the dashboard, traffic monitoring, and reports.' }
+    };
+
+    const loginForm = $('#loginForm');
+    const loginError = $('#loginError');
+    const usernameEl = $('#username');
+    const passwordEl = $('#password');
+    const loginSection = $('#login');
+    const app = $('#app');
+    const userNameEl = $('#userName');
+    const roleEl = $('#role');
+    const permissionsEl = $('#permissions');
+
+    if (!loginForm || !usernameEl || !passwordEl) {
+      console.error('Login elements are missing from the page.');
+      if (loginError) loginError.textContent = 'Login not available (missing form elements).';
+      return;
+    }
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (loginError) loginError.textContent = '';
+
+      const key = (usernameEl.value || '').trim().toLowerCase();
+      const pass = (passwordEl.value || '').trim();
+      const u = users[key];
+
+      if (!u || u.password !== pass) {
+        if (loginError) loginError.textContent = 'Invalid demo credentials. Use admin/officer/viewer and password 1234.';
+        return;
+      }
+
+      // Successful login
+      if (loginSection) loginSection.classList.add('hidden');
+      if (app) app.classList.remove('hidden');
+      if (userNameEl) userNameEl.textContent = u.name;
+      if (roleEl) roleEl.textContent = key.toUpperCase();
+      if (permissionsEl) permissionsEl.textContent = u.permissions;
+    });
+  } catch (err) {
+    console.error('Login setup failed:', err);
+    const loginError = document.getElementById('loginError');
+    if (loginError) loginError.textContent = 'Login temporarily unavailable — check console for details.';
+  }
+})();
 </script></body></html>
