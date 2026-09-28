@@ -9,7 +9,7 @@
     *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:#1e293b}.hidden{display:none!important}
     .login{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 15% 15%,#dbeafe,transparent 35%),var(--bg)}
     .login-card,.card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px #0f172a12}
-    .login-card{width:min(430px,100%);padding:30px}.logo{font-size:42px;text-align:center}.login-card h1{text-align:center;margin:8px 0 4px}.muted{color:var(--muted);font-size:13px}.center{text-align:center}.field{margin-top:12px}
+    .login-card{width:min(430px,100%);padding:30px}.logo{font-size:42px;text-align:center}.login-card h1{text-align:center;margin:8px 0 4px}.muted{color:var(--muted);font-size:13px}.center{text-align:center}
     .field input,.field select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff}
     .field.primary{display:block;width:100%;margin-top:18px;padding:10px;border-radius:10px;background:var(--blue);color:#fff;border:none;cursor:pointer}
     .demo{display:flex;gap:8px;margin-top:12px}.demo button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer}
@@ -28,6 +28,12 @@
     .badge.green{background:var(--green)}.badge.amber{background:var(--amber)}.badge.red{background:var(--red)}
     .route-form{display:flex;gap:12px;align-items:end}
     .route-result{margin-top:12px}
+
+    /* Direction arrow styles */
+    .direction{display:flex;align-items:center;gap:12px;margin-top:8px}
+    .arrow{width:28px;height:28px;display:inline-block;transition:transform 0.25s ease}
+    .dir-label{font-size:14px;color:#0f172a}
+    .dir-sub{font-size:13px;color:var(--muted);margin-top:4px}
   </style>
 </head>
 <body>
@@ -181,12 +187,12 @@
     };
 
     const routeOptions = [
-      { name: 'Central Boulevard → Airport Road', from: 'City Hall', to: 'Airport', travelMinutes: 18, condition: 'green', label: 'Free flowing' },
-      { name: 'North Avenue → East Ring Road', from: 'City Hall', to: 'Airport', travelMinutes: 24, condition: 'amber', label: 'Moderate' },
-      { name: 'Market Link → Riverside Drive', from: 'City Hall', to: 'Airport', travelMinutes: 31, condition: 'red', label: 'Congested' },
-      { name: 'Harbor Route → Main Street', from: 'Central Market', to: 'University', travelMinutes: 15, condition: 'green', label: 'Free flowing' },
-      { name: 'Airport Road → North Avenue', from: 'Airport', to: 'University', travelMinutes: 26, condition: 'amber', label: 'Moderate' },
-      { name: 'Market Link → Central Boulevard', from: 'Central Market', to: 'City Hall', travelMinutes: 29, condition: 'red', label: 'Congested' }
+      { name: 'Central Boulevard → Airport Road', from: 'City Hall', to: 'Airport', travelMinutes: 18, condition: 'green', label: 'Free flowing', bearing: 115 },
+      { name: 'North Avenue → East Ring Road', from: 'City Hall', to: 'Airport', travelMinutes: 24, condition: 'amber', label: 'Moderate', bearing: 80 },
+      { name: 'Market Link → Riverside Drive', from: 'City Hall', to: 'Airport', travelMinutes: 31, condition: 'red', label: 'Congested', bearing: 45 },
+      { name: 'Harbor Route → Main Street', from: 'Central Market', to: 'University', travelMinutes: 15, condition: 'green', label: 'Free flowing', bearing: 200 },
+      { name: 'Airport Road → North Avenue', from: 'Airport', to: 'University', travelMinutes: 26, condition: 'amber', label: 'Moderate', bearing: 330 },
+      { name: 'Market Link → Central Boulevard', from: 'Central Market', to: 'City Hall', travelMinutes: 29, condition: 'red', label: 'Congested', bearing: 270 }
     ];
 
     const $ = (selector) => document.querySelector(selector);
@@ -263,9 +269,20 @@
       const rem = mins % 60;
       const timeStr = hours ? `${hours}h ${rem}m (${mins} minutes)` : `${rem} minutes`;
 
+      // Direction arrow (replaces stoplight badge)
+      const bearing = best.bearing || 0;
+
       $('#routeResult').innerHTML = `
         <strong>Best route: ${best.name}</strong>
-        <p>Estimated travel time: ${timeStr} · Current traffic: <span class="badge ${best.condition}">${best.label}</span></p>
+        <div class="direction">
+          <svg class="arrow" viewBox="0 0 24 24" style="transform:rotate(${bearing}deg);" aria-hidden="true">
+            <path fill="#0f172a" d="M12 2l4 8h-3v8h-2v-8H8l4-8z" />
+          </svg>
+          <div>
+            <div class="dir-label">Direction to destination: <strong>${best.to}</strong></div>
+            <div class="dir-sub">Estimated travel time: ${timeStr}</div>
+          </div>
+        </div>
       `;
     });
   </script>
