@@ -32,6 +32,7 @@
 </div></main></div>
 <button id="botToggle" class="bot-toggle" aria-label="Open Traffic Bot">💬</button><div id="bot" class="bot"><div class="bot-head"><span>QC Traffic Bot</span><button id="closeBot">×</button></div><div class="bot-body"></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script>
+const $ = (selector) => document.querySelector(selector);
 const users={admin:{name:'Administrator',password:'1234',permissions:'Manage Quezon City users, roads, signals, and reports.'},officer:{name:'Traffic Officer',password:'1234',permissions:'Monitor traffic,report incidents, and update incident status.'},viewer:{name:'Viewer',password:'1234',permissions:'Access the dashboard, traffic monitoring, and reports.'}};
 $('#loginForm').onsubmit=e=>{e.preventDefault();const key=$('#username').value.trim().toLowerCase(),u=users[key];if(!u||u.password!==$('#password').value.trim()){$('#loginError').textContent='Invalid demo credentials.';return;}$('#login').classList.add('hidden');$('#app').classList.remove('hidden');$('#userName').textContent=u.name;$('#role').textContent=key.toUpperCase();$('#permissions').textContent=u.permissions};
 </script></body></html>
