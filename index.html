@@ -385,7 +385,6 @@
               <label for="typeInput">Incident Type</label>
               <select id="typeInput" name="type" required>
                 <option value="">Select type...</option>
-                <option value="accident">Accident</option>
                 <option value="signal">Signal Malfunction</option>
                 <option value="construction">Road Construction</option>
                 <option value="weather">Weather Impact</option>
@@ -468,7 +467,7 @@
 
     let currentUser = null;
     const incidents = [
-      { id: 1, location: 'EDSA North - Quezon Avenue', type: 'accident', status: 'active', time: '2:45 PM' },
+      { id: 1, location: 'EDSA North - Quezon Avenue', type: 'signal', status: 'active', time: '2:45 PM' },
       { id: 2, location: 'Commonwealth Ave - Aurora Blvd', type: 'signal', status: 'resolved', time: '1:30 PM' }
     ];
 
