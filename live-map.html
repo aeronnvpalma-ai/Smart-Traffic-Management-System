@@ -57,7 +57,7 @@
   <div class="layout">
     <aside class="panel">
       <h1>Quezon City</h1>
-      <p class="subtitle">Traffic conditions, destinations, and directions</p>
+      <p class="subtitle">Traffic conditions, destinations, and directions within Quezon City</p>
 
       <div class="field">
         <label for="origin">STARTING POINT</label>
@@ -88,7 +88,7 @@
 
       <div class="card">
         <div class="card-title">Route details</div>
-        <div id="routeSummary">Choose a starting point and destination, then select Directions.</div>
+        <div id="routeSummary">Choose two Quezon City locations, then select Directions.</div>
       </div>
 
       <div class="card">
@@ -99,17 +99,24 @@
       </div>
 
       <div class="card">
-        <div class="card-title">Main roads</div>
+        <div class="card-title">Quezon City roads</div>
         <div id="trafficList"></div>
       </div>
     </aside>
-    <main id="map" aria-label="Interactive map of Quezon City"></main>
+    <main id="map" aria-label="Interactive map focused on Quezon City"></main>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script>
     const qcCenter = [14.6507, 121.0494];
-    const map = L.map('map', { zoomControl: true }).setView(qcCenter, 13);
+    const qcBounds = L.latLngBounds([14.575, 120.97], [14.76, 121.13]);
+    const map = L.map('map', {
+      zoomControl: true,
+      maxBounds: qcBounds,
+      maxBoundsViscosity: 1.0,
+      minZoom: 11
+    }).setView(qcCenter, 13);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors'
@@ -120,13 +127,16 @@
       { name: 'Commonwealth Avenue', point: [14.6680, 121.0560], status: 'red', speed: 16 },
       { name: 'Quezon Avenue', point: [14.6420, 121.0250], status: 'amber', speed: 28 },
       { name: 'Aurora Boulevard', point: [14.6290, 121.0640], status: 'green', speed: 39 },
-      { name: 'España Boulevard', point: [14.6200, 121.0100], status: 'amber', speed: 25 },
       { name: 'Katipunan Avenue', point: [14.6420, 121.0730], status: 'red', speed: 14 },
       { name: 'Roosevelt Avenue', point: [14.6570, 121.0320], status: 'amber', speed: 27 }
     ];
     const colors = { green: '#188038', amber: '#f9ab00', red: '#d93025' };
     const labels = { green: 'Free flow', amber: 'Moderate', red: 'Heavy traffic' };
     const roadMarkers = [];
+
+    function roadPopup(road) {
+      return `<strong>${road.name}</strong><br><span style="color:${colors[road.status]}">${labels[road.status]}</span><br>Average speed: ${road.speed} km/h`;
+    }
 
     roads.forEach((road) => {
       const marker = L.circleMarker(road.point, {
@@ -136,13 +146,12 @@
         fillColor: colors[road.status],
         fillOpacity: 0.95
       }).addTo(map);
-      marker.bindPopup(`<strong>${road.name}</strong><br><span style="color:${colors[road.status]}">${labels[road.status]}</span><br>Average speed: ${road.speed} km/h`);
+      marker.bindPopup(roadPopup(road));
       roadMarkers.push({ marker, road });
     });
 
     function renderTrafficList() {
-      const trafficList = document.getElementById('trafficList');
-      trafficList.innerHTML = roads.map((road) => `
+      document.getElementById('trafficList').innerHTML = roads.map((road) => `
         <div class="traffic-row"><span>${road.name}</span><strong style="color:${colors[road.status]}">${road.speed} km/h</strong></div>
       `).join('');
     }
@@ -160,54 +169,51 @@
       return document.getElementById(id).selectedOptions[0].textContent;
     }
 
+    function clearRoute() {
+      if (startMarker) map.removeLayer(startMarker);
+      if (destinationMarker) map.removeLayer(destinationMarker);
+      if (routeLine) map.removeLayer(routeLine);
+      startMarker = destinationMarker = routeLine = null;
+    }
+
     async function showDirections() {
       const start = coords('origin');
       const destination = coords('destination');
       const routeSummary = document.getElementById('routeSummary');
 
       if (start[0] === destination[0] && start[1] === destination[1]) {
-        routeSummary.textContent = 'Choose two different locations.';
+        routeSummary.textContent = 'Choose two different Quezon City locations.';
         return;
       }
 
-      if (startMarker) map.removeLayer(startMarker);
-      if (destinationMarker) map.removeLayer(destinationMarker);
-      if (routeLine) map.removeLayer(routeLine);
-
+      clearRoute();
       startMarker = L.marker(start).addTo(map).bindPopup(`<strong>Start</strong><br>${name('origin')}`).openPopup();
       destinationMarker = L.marker(destination).addTo(map).bindPopup(`<strong>Destination</strong><br>${name('destination')}`);
-      routeSummary.textContent = 'Loading route directions…';
+      routeSummary.textContent = 'Loading Quezon City route directions…';
 
       try {
         const url = `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${destination[1]},${destination[0]}?overview=full&geometries=geojson`;
         const response = await fetch(url);
         if (!response.ok) throw new Error('Route service unavailable');
-
         const data = await response.json();
         if (!data.routes || !data.routes[0]) throw new Error('No route found');
 
         const route = data.routes[0];
         routeLine = L.geoJSON(route.geometry, { style: { color: '#1a73e8', weight: 6, opacity: 0.85 } }).addTo(map);
-        map.fitBounds(routeLine.getBounds(), { padding: [35, 35] });
-
-        const distanceKm = (route.distance / 1000).toFixed(1);
-        const durationMinutes = Math.max(1, Math.round(route.duration / 60));
-        routeSummary.innerHTML = `<strong>${name('origin')} → ${name('destination')}</strong><br>${distanceKm} km · about ${durationMinutes} min`;
+        map.fitBounds(routeLine.getBounds(), { padding: [35, 35], maxZoom: 15 });
+        routeSummary.innerHTML = `<strong>${name('origin')} → ${name('destination')}</strong><br>${(route.distance / 1000).toFixed(1)} km · about ${Math.max(1, Math.round(route.duration / 60))} min`;
       } catch (error) {
         routeLine = L.polyline([start, destination], { color: '#1a73e8', weight: 5, dashArray: '8 8' }).addTo(map);
-        map.fitBounds(routeLine.getBounds(), { padding: [35, 35] });
+        map.fitBounds(routeLine.getBounds(), { padding: [35, 35], maxZoom: 15 });
         routeSummary.textContent = `${name('origin')} → ${name('destination')}. Straight-line preview shown; detailed routing is temporarily unavailable.`;
       }
     }
 
     document.getElementById('directionsBtn').addEventListener('click', showDirections);
     document.getElementById('clearBtn').addEventListener('click', () => {
-      if (startMarker) map.removeLayer(startMarker);
-      if (destinationMarker) map.removeLayer(destinationMarker);
-      if (routeLine) map.removeLayer(routeLine);
-      startMarker = destinationMarker = routeLine = null;
+      clearRoute();
       map.setView(qcCenter, 13);
-      document.getElementById('routeSummary').textContent = 'Choose a starting point and destination, then select Directions.';
+      document.getElementById('routeSummary').textContent = 'Choose two Quezon City locations, then select Directions.';
     });
 
     document.getElementById('refreshBtn').addEventListener('click', () => {
@@ -223,7 +229,7 @@
 
       roadMarkers.forEach(({ marker, road }) => {
         marker.setStyle({ fillColor: colors[road.status] });
-        marker.bindPopup(`<strong>${road.name}</strong><br><span style="color:${colors[road.status]}">${labels[road.status]}</span><br>Average speed: ${road.speed} km/h`);
+        marker.bindPopup(roadPopup(road));
       });
       renderTrafficList();
     });
