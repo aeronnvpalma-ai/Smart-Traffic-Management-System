@@ -17,18 +17,13 @@
       --amber: #f59e0b;
       --red: #ef4444;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--navy);
     }
-
     .header {
       background: white;
       border-bottom: 1px solid var(--line);
@@ -36,256 +31,134 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo {
-      font-size: 28px;
-    }
-
-    .title {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .subtitle {
-      margin: 0;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .header-right {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .logo { font-size: 28px; }
+    .title { margin: 0; font-size: 20px; font-weight: 700; }
+    .subtitle { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .header-right { display: flex; gap: 12px; align-items: center; }
     .btn {
-      padding: 8px 16px;
+      padding: 9px 16px;
+      border-radius: 10px;
+      text-decoration: none;
       border: 1px solid var(--line);
       background: white;
       color: var(--navy);
-      border-radius: 8px;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.2s;
+      font-weight: 700;
+      display: inline-block;
     }
-
-    .btn:hover {
-      background: var(--bg);
-      border-color: var(--blue);
-      color: var(--blue);
-    }
-
-    .btn-primary {
+    .btn.primary {
       background: var(--blue);
-      color: white;
       border-color: var(--blue);
+      color: white;
     }
-
-    .btn-primary:hover {
-      background: var(--blue-dark);
-      border-color: var(--blue-dark);
-    }
-
     .container {
-      display: flex;
-      height: calc(100vh - 70px);
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 74px);
     }
-
     .sidebar {
-      width: 280px;
       background: white;
       border-right: 1px solid var(--line);
       padding: 20px;
-      overflow-y: auto;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
-
     .sidebar-title {
-      margin: 0 0 12px 0;
+      margin: 0 0 14px;
       font-size: 12px;
-      font-weight: 700;
-      color: var(--muted);
+      letter-spacing: 0.6px;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: var(--muted);
     }
-
-    .filter-group {
-      margin-bottom: 20px;
-    }
-
     .filter-option {
       display: flex;
       align-items: center;
-      padding: 8px 0;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .filter-option input[type="checkbox"] {
-      margin-right: 8px;
-      cursor: pointer;
-    }
-
-    .filter-option label {
-      cursor: pointer;
-      flex: 1;
-    }
-
-    .status-indicator {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
-      margin-right: 8px;
-      vertical-align: middle;
-    }
-
-    .status-green {
-      background: var(--green);
-    }
-
-    .status-amber {
-      background: var(--amber);
-    }
-
-    .status-red {
-      background: var(--red);
-    }
-
-    .map-container {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-    }
-
-    svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    .corridor-line {
-      transition: stroke 0.3s;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .corridor-line:hover {
-      stroke-width: 4;
-      filter: brightness(1.1);
-      cursor: pointer;
-    }
-
-    .corridor-label {
-      font-size: 12px;
-      font-weight: 600;
-      fill: var(--navy);
-      text-anchor: middle;
-      pointer-events: none;
-      background: white;
-    }
-
-    .tooltip {
-      position: absolute;
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      font-size: 13px;
-      z-index: 1000;
-      pointer-events: none;
-      display: none;
-    }
-
-    .tooltip.visible {
-      display: block;
-    }
-
-    .tooltip-title {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .tooltip-content {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .stats-panel {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      min-width: 200px;
-    }
-
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      font-size: 13px;
-    }
-
-    .stat-label {
-      color: var(--muted);
-    }
-
-    .stat-value {
+      gap: 10px;
+      margin: 12px 0;
       font-weight: 600;
       color: var(--navy);
     }
-
-    .loading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .green { background: var(--green); }
+    .amber { background: var(--amber); }
+    .red { background: var(--red); }
+    .map-panel {
+      position: relative;
+      background: linear-gradient(180deg, #eef6ff, #f8fafc);
+      overflow: hidden;
+    }
+    svg {
+      width: 100%;
       height: 100%;
-      font-size: 16px;
+      display: block;
+    }
+    .corridor-line {
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 10;
+      cursor: pointer;
+      transition: stroke-width 0.2s ease;
+    }
+    .corridor-line:hover {
+      stroke-width: 14;
+    }
+    .corridor-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-anchor: middle;
+      fill: var(--navy);
+    }
+    .tooltip {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+      padding: 12px 14px;
+      min-width: 170px;
+      display: none;
+    }
+    .tooltip.visible { display: block; }
+    .tooltip-title {
+      font-weight: 800;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    .tooltip-body {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .stats-box {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      padding: 12px 14px;
+      min-width: 190px;
+    }
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 13px;
       color: var(--muted);
     }
-
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        max-height: 150px;
-        border-right: none;
-        border-bottom: 1px solid var(--line);
-        display: flex;
-        gap: 20px;
-        overflow-x: auto;
-        padding: 12px 20px;
-      }
-
-      .filter-group {
-        margin-bottom: 0;
-        flex-shrink: 0;
-      }
-
-      .stats-panel {
-        bottom: 10px;
-        right: 10px;
-        min-width: 160px;
-        padding: 12px;
-      }
+    .stats-row strong { color: var(--navy); }
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--line); }
     }
   </style>
 </head>
@@ -295,236 +168,139 @@
       <div class="logo">🗺️</div>
       <div>
         <p class="title">Live Traffic Map</p>
-        <p class="subtitle">Real-time corridor status</p>
+        <p class="subtitle">Queue and corridor status</p>
       </div>
     </div>
     <div class="header-right">
-      <button class="btn btn-primary" id="refreshBtn" title="Refresh map data">🔄 Refresh</button>
-      <a href="index.html" class="btn" title="Back to dashboard">← Dashboard</a>
+      <button id="refreshBtn" class="btn primary" type="button">🔄 Refresh</button>
+      <a href="index.html" class="btn">← Dashboard</a>
     </div>
   </div>
 
   <div class="container">
-    <div class="sidebar">
-      <div class="filter-group">
-        <p class="sidebar-title">Filter by Status</p>
-        <div class="filter-option">
-          <input type="checkbox" id="filterGreen" checked>
-          <label for="filterGreen">
-            <span class="status-indicator status-green"></span>
-            Free Flow
-          </label>
-        </div>
-        <div class="filter-option">
-          <input type="checkbox" id="filterAmber" checked>
-          <label for="filterAmber">
-            <span class="status-indicator status-amber"></span>
-            Moderate
-          </label>
-        </div>
-        <div class="filter-option">
-          <input type="checkbox" id="filterRed" checked>
-          <label for="filterRed">
-            <span class="status-indicator status-red"></span>
-            Congestion
-          </label>
-        </div>
-      </div>
-    </div>
+    <aside class="sidebar">
+      <p class="sidebar-title">Filter by status</p>
+      <div class="filter-option"><input id="filterGreen" type="checkbox" checked><span class="status-dot green"></span>Free Flow</div>
+      <div class="filter-option"><input id="filterAmber" type="checkbox" checked><span class="status-dot amber"></span>Moderate</div>
+      <div class="filter-option"><input id="filterRed" type="checkbox" checked><span class="status-dot red"></span>Congestion</div>
+    </aside>
 
-    <div class="map-container">
-      <svg id="mapSvg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <filter id="shadow">
-            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
-          </filter>
-        </defs>
-        <g id="corridorsGroup"></g>
-        <g id="labelsGroup"></g>
-      </svg>
-      <div class="tooltip" id="tooltip"></div>
-      <div class="stats-panel" id="statsPanel">
-        <div class="stat-row">
-          <span class="stat-label">Free Flow:</span>
-          <span class="stat-value" id="statGreen">0</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Moderate:</span>
-          <span class="stat-value" id="statAmber">0</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Congestion:</span>
-          <span class="stat-value" id="statRed">0</span>
-        </div>
+    <div class="map-panel">
+      <svg id="map" viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg" aria-label="Traffic map"></svg>
+      <div id="tooltip" class="tooltip" role="tooltip"></div>
+      <div class="stats-box">
+        <div class="stats-row"><span>Free Flow</span><strong id="statGreen">0</strong></div>
+        <div class="stats-row"><span>Moderate</span><strong id="statAmber">0</strong></div>
+        <div class="stats-row"><span>Congestion</span><strong id="statRed">0</strong></div>
       </div>
     </div>
   </div>
 
   <script>
     const corridors = [
-      { id: 1, name: "EDSA North", x1: 100, y1: 100, x2: 100, y2: 500, status: "free" },
-      { id: 2, name: "EDSA South", x1: 900, y1: 100, x2: 900, y2: 500, status: "moderate" },
-      { id: 3, name: "Commonwealth Ave", x1: 150, y1: 250, x2: 850, y2: 250, status: "free" },
-      { id: 4, name: "Quezon Ave", x1: 200, y1: 150, x2: 800, y2: 350, status: "congested" },
-      { id: 5, name: "España Blvd", x1: 300, y1: 100, x2: 300, y2: 600, status: "moderate" },
-      { id: 6, name: "Aurora Blvd", x1: 600, y1: 150, x2: 600, y2: 550, status: "free" },
-      { id: 7, name: "Morayta St", x1: 100, y1: 400, x2: 900, y2: 400, status: "moderate" },
-      { id: 8, name: "Romualdez St", x1: 200, y1: 500, x2: 800, y2: 300, status: "free" }
+      { name: 'EDSA North', x1: 100, y1: 100, x2: 100, y2: 520, status: 'free' },
+      { name: 'EDSA South', x1: 890, y1: 100, x2: 890, y2: 520, status: 'moderate' },
+      { name: 'Commonwealth Ave', x1: 150, y1: 260, x2: 850, y2: 260, status: 'free' },
+      { name: 'Quezon Ave', x1: 220, y1: 150, x2: 820, y2: 360, status: 'congested' },
+      { name: 'España Blvd', x1: 300, y1: 100, x2: 300, y2: 600, status: 'moderate' },
+      { name: 'Aurora Blvd', x1: 600, y1: 160, x2: 600, y2: 560, status: 'free' },
+      { name: 'Morayta St', x1: 100, y1: 420, x2: 900, y2: 420, status: 'moderate' },
+      { name: 'Romualdez St', x1: 200, y1: 520, x2: 800, y2: 300, status: 'free' }
     ];
 
-    const svg = document.getElementById("mapSvg");
-    const corridorsGroup = document.getElementById("corridorsGroup");
-    const labelsGroup = document.getElementById("labelsGroup");
-    const tooltip = document.getElementById("tooltip");
-    const filterGreen = document.getElementById("filterGreen");
-    const filterAmber = document.getElementById("filterAmber");
-    const filterRed = document.getElementById("filterRed");
-    const refreshBtn = document.getElementById("refreshBtn");
-
-    function getStatusColor(status) {
-      switch(status) {
-        case "free": return "#10b981";
-        case "moderate": return "#f59e0b";
-        case "congested": return "#ef4444";
-        default: return "#64748b";
-      }
+    function getColor(status) {
+      if (status === 'free') return '#10b981';
+      if (status === 'moderate') return '#f59e0b';
+      return '#ef4444';
     }
 
-    function getStatusLabel(status) {
-      switch(status) {
-        case "free": return "Free Flow";
-        case "moderate": return "Moderate";
-        case "congested": return "Congestion";
-        default: return "Unknown";
-      }
+    function getLabel(status) {
+      if (status === 'free') return 'Free Flow';
+      if (status === 'moderate') return 'Moderate';
+      return 'Congestion';
     }
 
-    function shouldShowCorridor(status) {
-      if (status === "free") return filterGreen.checked;
-      if (status === "moderate") return filterAmber.checked;
-      if (status === "congested") return filterRed.checked;
-      return true;
+    function checkVisible(status) {
+      if (status === 'free') return document.getElementById('filterGreen').checked;
+      if (status === 'moderate') return document.getElementById('filterAmber').checked;
+      return document.getElementById('filterRed').checked;
     }
 
     function drawMap() {
-      corridorsGroup.innerHTML = "";
-      labelsGroup.innerHTML = "";
+      const svg = document.getElementById('map');
+      svg.innerHTML = '';
+      let counts = { free: 0, moderate: 0, congested: 0 };
 
-      let stats = { green: 0, amber: 0, red: 0 };
+      corridors.forEach((corridor) => {
+        if (!checkVisible(corridor.status)) return;
 
-      corridors.forEach(corridor => {
-        if (!shouldShowCorridor(corridor.status)) return;
+        if (corridor.status === 'free') counts.free++;
+        if (corridor.status === 'moderate') counts.moderate++;
+        if (corridor.status === 'congested') counts.congested++;
 
-        const color = getStatusColor(corridor.status);
-        if (corridor.status === "free") stats.green++;
-        else if (corridor.status === "moderate") stats.amber++;
-        else if (corridor.status === "congested") stats.red++;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', corridor.x1);
+        line.setAttribute('y1', corridor.y1);
+        line.setAttribute('x2', corridor.x2);
+        line.setAttribute('y2', corridor.y2);
+        line.setAttribute('stroke', getColor(corridor.status));
+        line.setAttribute('class', 'corridor-line');
+        line.setAttribute('data-name', corridor.name);
+        line.setAttribute('data-status', corridor.status);
+        line.style.stroke = getColor(corridor.status);
 
-        // Draw line
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("x1", corridor.x1);
-        line.setAttribute("y1", corridor.y1);
-        line.setAttribute("x2", corridor.x2);
-        line.setAttribute("y2", corridor.y2);
-        line.setAttribute("stroke", color);
-        line.setAttribute("stroke-width", "8");
-        line.setAttribute("class", "corridor-line");
-        line.setAttribute("data-id", corridor.id);
-        line.setAttribute("filter", "url(#shadow)");
+        line.addEventListener('mousemove', (event) => showTooltip(event, corridor));
+        line.addEventListener('mouseleave', hideTooltip);
+        line.addEventListener('click', () => alert(`${corridor.name}\nStatus: ${getLabel(corridor.status)}`));
 
-        line.addEventListener("mouseover", (e) => showTooltip(corridor, e));
-        line.addEventListener("mousemove", (e) => moveTooltip(e));
-        line.addEventListener("mouseout", hideTooltip);
-        line.addEventListener("click", (e) => handleLineClick(corridor, e));
+        svg.appendChild(line);
 
-        corridorsGroup.appendChild(line);
-
-        // Draw label at midpoint
-        const midX = (corridor.x1 + corridor.x2) / 2;
-        const midY = (corridor.y1 + corridor.y2) / 2;
-        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        text.setAttribute("x", midX);
-        text.setAttribute("y", midY);
-        text.setAttribute("class", "corridor-label");
-        text.setAttribute("dy", "-10");
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', (corridor.x1 + corridor.x2) / 2);
+        text.setAttribute('y', (corridor.y1 + corridor.y2) / 2 - 6);
+        text.setAttribute('class', 'corridor-label');
         text.textContent = corridor.name;
-        labelsGroup.appendChild(text);
+        svg.appendChild(text);
       });
 
-      updateStats(stats);
+      document.getElementById('statGreen').textContent = counts.free;
+      document.getElementById('statAmber').textContent = counts.moderate;
+      document.getElementById('statRed').textContent = counts.congested;
     }
 
-    function showTooltip(corridor, e) {
-      const label = getStatusLabel(corridor.status);
-      const avgSpeed = corridor.status === "free" ? 50 : corridor.status === "moderate" ? 25 : 10;
+    function showTooltip(event, corridor) {
+      const tooltip = document.getElementById('tooltip');
       tooltip.innerHTML = `
         <div class="tooltip-title">${corridor.name}</div>
-        <div class="tooltip-content">
-          Status: ${label}<br>
-          Avg Speed: ${avgSpeed} km/h<br>
-          Density: ${corridor.status === "free" ? "Low" : corridor.status === "moderate" ? "Medium" : "High"}
+        <div class="tooltip-body">
+          Status: ${getLabel(corridor.status)}<br>
+          Speed: ${corridor.status === 'free' ? '50 km/h' : corridor.status === 'moderate' ? '28 km/h' : '12 km/h'}
         </div>
       `;
-      tooltip.classList.add("visible");
-      moveTooltip(e);
-    }
-
-    function moveTooltip(e) {
-      const rect = svg.getBoundingClientRect();
-      const x = e.clientX - rect.left + 10;
-      const y = e.clientY - rect.top + 10;
-      tooltip.style.left = x + "px";
-      tooltip.style.top = y + "px";
+      tooltip.classList.add('visible');
+      tooltip.style.left = `${event.offsetX + 18}px`;
+      tooltip.style.top = `${event.offsetY + 18}px`;
     }
 
     function hideTooltip() {
-      tooltip.classList.remove("visible");
+      document.getElementById('tooltip').classList.remove('visible');
     }
 
-    function handleLineClick(corridor, e) {
-      alert(`${corridor.name}\n\nStatus: ${getStatusLabel(corridor.status)}\nYou can implement incident reporting here.`);
-    }
-
-    function updateStats(stats) {
-      document.getElementById("statGreen").textContent = stats.green;
-      document.getElementById("statAmber").textContent = stats.amber;
-      document.getElementById("statRed").textContent = stats.red;
-    }
-
-    function simulateTrafficChange() {
-      corridors.forEach(corridor => {
-        const rand = Math.random();
-        if (rand < 0.33) corridor.status = "free";
-        else if (rand < 0.66) corridor.status = "moderate";
-        else corridor.status = "congested";
+    function randomizeTraffic() {
+      corridors.forEach((corridor) => {
+        const random = Math.random();
+        corridor.status = random < 0.33 ? 'free' : random < 0.66 ? 'moderate' : 'congested';
       });
       drawMap();
     }
 
-    filterGreen.addEventListener("change", drawMap);
-    filterAmber.addEventListener("change", drawMap);
-    filterRed.addEventListener("change", drawMap);
-    refreshBtn.addEventListener("click", () => {
-      refreshBtn.style.animation = "spin 0.6s";
-      simulateTrafficChange();
-      setTimeout(() => { refreshBtn.style.animation = ""; }, 600);
-    });
+    document.getElementById('filterGreen').addEventListener('change', drawMap);
+    document.getElementById('filterAmber').addEventListener('change', drawMap);
+    document.getElementById('filterRed').addEventListener('change', drawMap);
+    document.getElementById('refreshBtn').addEventListener('click', randomizeTraffic);
 
-    // Add spin animation
-    const style = document.createElement("style");
-    style.textContent = `
-      @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Initial draw
     drawMap();
-
-    // Auto-update every 30 seconds
-    setInterval(simulateTrafficChange, 30000);
+    setInterval(randomizeTraffic, 30000);
   </script>
 </body>
 </html>
