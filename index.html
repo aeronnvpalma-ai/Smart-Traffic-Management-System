@@ -91,28 +91,6 @@
     .primary-btn:hover, .btn:hover {
       background: var(--blue-dark);
     }
-    .demo-box {
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .demo-box p { margin: 0 0 12px; font-weight: 700; }
-    .demo-user {
-      background: #f8fafc;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 8px 10px;
-      margin-bottom: 8px;
-      line-height: 1.5;
-    }
-    code {
-      background: #e2e8f0;
-      padding: 2px 5px;
-      border-radius: 4px;
-      color: var(--navy);
-    }
 
     .shell {
       display: grid;
@@ -276,7 +254,6 @@
     .badge.amber { background: rgba(245,158,11,0.1); color: var(--amber); }
     .badge.red { background: rgba(239,68,68,0.1); color: var(--red); }
     .badge.blue { background: rgba(37,99,235,0.1); color: var(--blue); }
-    .row-actions { display: flex; gap: 8px; }
     .mini-btn {
       border: 1px solid var(--line);
       background: white;
@@ -314,13 +291,6 @@
       </div>
 
       <button type="submit" class="primary-btn" style="width:100%;">Sign in</button>
-
-      <div class="demo-box">
-        <p>Demo users</p>
-        <div class="demo-user"><strong>Admin</strong><br>Username: <code>admin</code><br>Password: <code>1234</code></div>
-        <div class="demo-user"><strong>Officer</strong><br>Username: <code>officer</code><br>Password: <code>1234</code></div>
-        <div class="demo-user"><strong>Viewer</strong><br>Username: <code>viewer</code><br>Password: <code>1234</code></div>
-      </div>
     </form>
   </section>
 
@@ -569,7 +539,7 @@
         renderIncidents();
         showSection('dashboardSection', navMenu.querySelector('button'));
       } else {
-        alert('Invalid username or password. Use the demo user credentials shown below.');
+        alert('Invalid username or password.');
       }
     });
 
