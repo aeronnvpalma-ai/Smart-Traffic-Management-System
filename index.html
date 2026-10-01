@@ -1,13 +1,615 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="description" content="Quezon City Smart Traffic Management System"><title>Smart Traffic Management System</title>
-<style>
-:root{--navy:#0f172a;--blue:#2563eb;--blue-dark:#1d4ed8;--bg:#f1f5f9;--line:#e2e8f0;--muted:#64748b;--green:#10b981;--amber:#f59e0b;--red:#ef4444}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:#1e293b}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.muted{color:var(--muted);font-size:.875rem}.center{text-align:center}.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 15% 15%,#dbeafe,transparent 35%),var(--bg)}.login-card,.card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 32px #0f172a1f}.login-card{width:min(560px,100%);padding:32px}.logo{text-align:center;font-size:44px}.login-card h1{text-align:center;margin:8px 0 4px}.field{display:block;margin-top:14px;font-weight:600}.field input{display:block;width:100%;margin-top:6px;padding:11px;border:1px solid #cbd5e1;border-radius:9px}.field input:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px #2563eb1f}.primary,.route-form button{width:100%;padding:12px;border:0;border-radius:9px;background:linear-gradient(180deg,var(--blue),var(--blue-dark));color:#fff;font-weight:700;box-shadow:0 8px 18px #2563eb2e}.primary{margin-top:20px}.primary:hover,.route-form button:hover{transform:translateY(-1px)}.alert{min-height:20px;color:var(--red)}.shell{display:flex;min-height:100vh}.side{width:250px;padding:24px;background:linear-gradient(180deg,var(--navy),#0b1220);color:#fff}.brand{font-size:18px;font-weight:800}.brand small{display:block;color:#94a3b8;font-size:11px;font-weight:400;margin-top:5px}.nav{display:flex;flex-direction:column;gap:7px;margin-top:25px}.nav button{background:transparent;border:0;color:#dbeafe;padding:11px 12px;text-align:left;border-radius:9px}.nav button:hover,.nav button.active{background:#334155}.main{min-width:0;flex:1;padding:28px}.top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.top h1{margin:0}.user{text-align:right}.content{margin-top:22px}.section{display:none}.section.active{display:block}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{padding:20px}.metric{font-size:25px;font-weight:800;margin-top:7px}.permission{margin-top:14px}.route-form{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end}.route-form label{display:block;font-weight:600;font-size:.9rem}.route-form select,.route-form button{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px;background:#fff}.route-form button{border:0;color:#fff}.route-result{margin-top:18px;padding:15px;background:#f8fafc;border-radius:10px}.badge{display:inline-block;padding:5px 8px;border-radius:7px;color:#fff;font-size:12px}.green{background:var(--green)}.amber{background:var(--amber)}.red{background:var(--red)}.status-strip{margin-top:14px;padding:12px;background:#eff6ff;border-radius:9px}@media(max-width:760px){.shell{display:block}.side{width:100%;padding:16px}.nav{flex-direction:row;overflow:auto;margin-top:14px}.nav button{white-space:nowrap}.main{padding:18px}.grid,.route-form{grid-template-columns:1fr}.top{display:block}.user{text-align:left;margin-top:10px}}
-</style></head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Quezon City Smart Traffic Management System">
+  <title>Smart Traffic Management</title>
+  <style>
+    :root {
+      --navy: #0f172a;
+      --blue: #2563eb;
+      --blue-dark: #1d4ed8;
+      --bg: #f1f5f9;
+      --line: #e2e8f0;
+      --muted: #64748b;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--navy);
+    }
+    .login {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
+      padding: 24px;
+    }
+    .login.hidden, .shell.hidden { display: none; }
+    .login-card {
+      width: min(100%, 420px);
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+      padding: 32px 28px;
+    }
+    .logo { font-size: 52px; text-align: center; margin-bottom: 8px; }
+    h1 {
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: 32px;
+      line-height: 1.2;
+    }
+    .muted {
+      color: var(--muted);
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 24px;
+    }
+    .field {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    input, select, textarea, button {
+      font: inherit;
+    }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 15px;
+      background: #fff;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+    .primary-btn, .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .primary-btn:hover, .btn:hover {
+      background: var(--blue-dark);
+    }
+    .demo-box {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .demo-box p { margin: 0 0 12px; font-weight: 700; }
+    .demo-user {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    code {
+      background: #e2e8f0;
+      padding: 2px 5px;
+      border-radius: 4px;
+      color: var(--navy);
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      grid-template-rows: 72px auto;
+      min-height: 100vh;
+    }
+    header {
+      grid-column: 1 / -1;
+      background: white;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+    .brand-mark {
+      font-size: 1.5rem;
+    }
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .user-chip {
+      display: inline-block;
+      background: #eff6ff;
+      color: var(--blue);
+      border: 1px solid #bfdbfe;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .logout-btn {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    aside {
+      background: white;
+      border-right: 1px solid var(--line);
+      padding-top: 12px;
+    }
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 0 12px;
+    }
+    nav button {
+      width: 100%;
+      text-align: left;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 12px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    nav button.active {
+      background: #eff6ff;
+      color: var(--blue);
+      border-left: 3px solid var(--blue);
+      padding-left: 9px;
+    }
+    main {
+      padding: 24px;
+      background: var(--bg);
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
+    .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+    }
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 1.1rem;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(150px, 1fr));
+      gap: 16px;
+    }
+    .stat {
+      border-radius: 12px;
+      padding: 18px 16px;
+      border-left: 4px solid;
+      background: #f8fafc;
+      font-weight: 700;
+    }
+    .stat .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 10px;
+    }
+    .stat .value {
+      font-size: 2rem;
+      line-height: 1;
+    }
+    .stat.green { border-color: var(--green); background: rgba(16,185,129,0.06); color: var(--green); }
+    .stat.amber { border-color: var(--amber); background: rgba(245,158,11,0.06); color: var(--amber); }
+    .stat.red { border-color: var(--red); background: rgba(239,68,68,0.06); color: var(--red); }
+    .map-link {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background: #f8fafc;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-size: 12px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .badge.green { background: rgba(16,185,129,0.1); color: var(--green); }
+    .badge.amber { background: rgba(245,158,11,0.1); color: var(--amber); }
+    .badge.red { background: rgba(239,68,68,0.1); color: var(--red); }
+    .badge.blue { background: rgba(37,99,235,0.1); color: var(--blue); }
+    .row-actions { display: flex; gap: 8px; }
+    .mini-btn {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 8px;
+      color: var(--navy);
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    form .field { margin-bottom: 18px; }
+    textarea { min-height: 110px; resize: vertical; }
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      aside { border-right: none; border-bottom: 1px solid var(--line); }
+      nav { flex-direction: row; flex-wrap: wrap; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
 <body>
-<section id="login" class="login"><form id="loginForm" class="login-card"><div class="logo">🚦</div><h1>Smart Traffic Management</h1><p class="muted center">Sign in to continue</p><label class="field" for="username">Username<input id="username" required maxlength="25" autocomplete="username" placeholder="Enter username"></label><label class="field" for="password">Password<input id="password" type="password" required maxlength="25" autocomplete="current-password" placeholder="Enter password"></label><button class="primary" type="submit">Sign in</button><p id="loginError" class="alert center" role="alert"></p></form></section>
-<div id="app" class="shell hidden"><aside class="side"><div class="brand">🚦 Smart Traffic<small>Quezon City operations</small></div><nav class="nav" aria-label="Main navigation"><button class="active" data-section="overview">Overview</button><button data-section="routes">Best Route</button><button data-section="roads">Traffic Monitoring</button><button data-section="reports">Reports</button></nav></aside><main class="main"><header class="top"><div><h1 id="title">Operations Overview</h1><p class="muted">Quezon City traffic conditions</p></div><div class="user"><strong id="userName"></strong><br><span id="roleName" class="muted"></span></div></header><div class="content"><section id="overview" class="section active"><div class="grid"><div class="card"><span class="muted">Monitored vehicles</span><div class="metric">2,486</div></div><div class="card"><span class="muted">Average network speed</span><div class="metric">34 km/h</div></div><div class="card"><span class="muted">Active incidents</span><div class="metric">2</div></div></div><div class="card permission"><strong>Role permissions</strong><p id="permissions" class="muted"></p></div></section><section id="routes" class="section"><div class="card"><h2>Best Route</h2><p class="muted">Compare Quezon City routes using current simulated conditions.</p><form id="routeForm" class="route-form"><label for="from">From<select id="from"><option>City Hall</option><option>Airport</option><option>Central Market</option><option>University</option></select></label><label for="to">To<select id="to"><option>Airport</option><option>City Hall</option><option>Central Market</option><option>University</option></select></label><button type="submit">Find best route</button></form><div id="routeResult" class="route-result">Select an origin and destination.</div></div></section><section id="roads" class="section"><div class="card"><h2>Traffic Monitoring</h2><p>Commonwealth Avenue <span class="badge red">Congested · 16 km/h</span></p><p>North Avenue <span class="badge amber">Moderate · 27 km/h</span></p><p>Quirino Highway <span class="badge green">Free flowing · 38 km/h</span></p></div></section><section id="reports" class="section"><div class="card"><h2>Network Reports</h2><p class="muted">Daily traffic performance and incident summaries for Quezon City.</p><div class="status-strip">Role visibility: <strong id="reportAccess">Authorized</strong></div></div></section></div></main></div>
-<script>
-const users={admin:{name:'Administrator',permissions:'Manage users, roads, signals, and reports.'},officer:{name:'Traffic Officer',permissions:'Monitor traffic, report incidents, and update incident status.'},viewer:{name:'Viewer',permissions:'Access the dashboard, traffic monitoring, and reports.'}};const routes=[{name:'Central Boulevard → Airport Road',from:'City Hall',to:'Airport',minutes:18,condition:'green'},{name:'North Avenue → East Ring Road',from:'City Hall',to:'Airport',minutes:24,condition:'amber'},{name:'Harbor Route → Main Street',from:'Central Market',to:'University',minutes:15,condition:'green'}];const $=s=>document.querySelector(s);$('#loginForm').onsubmit=e=>{e.preventDefault();const key=$('#username').value.trim().toLowerCase(),pass=$('#password').value.trim(),u=users[key];if(!u||!pass){$('#loginError').textContent='Unable to sign in. Check your username and password.';return}$('#login').classList.add('hidden');$('#app').classList.remove('hidden');$('#userName').textContent=u.name;$('#roleName').textContent=key.toUpperCase();$('#permissions').textContent=u.permissions;$('#reportAccess').textContent=key==='admin'?'Full access':key==='officer'?'Officer access':'Read-only'};document.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===b.dataset.section));document.querySelectorAll('[data-section]').forEach(n=>n.classList.toggle('active',n===b));$('#title').textContent=b.textContent});$('#routeForm').onsubmit=e=>{e.preventDefault();const f=$('#from').value,t=$('#to').value;if(f===t)return $('#routeResult').textContent='Choose different locations.';const r=routes.find(x=>x.from===f&&x.to===t)||routes.find(x=>x.from===f||x.to===t);$('#routeResult').textContent=r?'Recommended: '+r.name+' · Estimated travel time: '+r.minutes+' minutes':'No route data is available for this pair yet.'};
-</script></body></html>
+  <section id="login" class="login">
+    <form id="loginForm" class="login-card">
+      <div class="logo">🚦</div>
+      <h1>Smart Traffic Management</h1>
+      <p class="muted">Sign in to continue</p>
+
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter username" required>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter password" required>
+      </div>
+
+      <button type="submit" class="primary-btn" style="width:100%;">Sign in</button>
+
+      <div class="demo-box">
+        <p>Demo users</p>
+        <div class="demo-user"><strong>Admin</strong><br>Username: <code>admin</code><br>Password: <code>1234</code></div>
+        <div class="demo-user"><strong>Officer</strong><br>Username: <code>officer</code><br>Password: <code>1234</code></div>
+        <div class="demo-user"><strong>Viewer</strong><br>Username: <code>viewer</code><br>Password: <code>1234</code></div>
+      </div>
+    </form>
+  </section>
+
+  <div id="app" class="shell hidden">
+    <header>
+      <div class="brand"><span class="brand-mark">🚦</span> Smart Traffic</div>
+      <div class="user-area">
+        <span id="userChip" class="user-chip">User</span>
+        <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+      </div>
+    </header>
+
+    <aside>
+      <nav id="navMenu" aria-label="Main navigation"></nav>
+    </aside>
+
+    <main>
+      <section id="dashboardSection" class="section active">
+        <div class="card">
+          <h2>📊 Dashboard Overview</h2>
+          <div class="stats-grid">
+            <div class="stat green"><span class="label">Free Flow</span><span class="value" id="dashGreen">8</span></div>
+            <div class="stat amber"><span class="label">Moderate</span><span class="value" id="dashAmber">6</span></div>
+            <div class="stat red"><span class="label">Congestion</span><span class="value" id="dashRed">4</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>🗺️ Live Map</h2>
+          <p style="margin:0; color:var(--muted);">Open the live traffic map for corridor status, filters, and refresh controls.</p>
+          <p style="margin-top:12px;"><a href="live-map.html" class="map-link">View live traffic map →</a></p>
+        </div>
+      </section>
+
+      <section id="monitoringSection" class="section">
+        <div class="card">
+          <h2>🛣️ Traffic Monitoring</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Corridor</th>
+                <th>Status</th>
+                <th>Avg Speed</th>
+                <th>Incidents</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="monitoringTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="incidentsSection" class="section">
+        <div class="card">
+          <h2>⚠️ Report Incident</h2>
+          <form id="incidentForm">
+            <div class="field">
+              <label for="locationInput">Location</label>
+              <input id="locationInput" name="location" type="text" required>
+            </div>
+            <div class="field">
+              <label for="typeInput">Incident Type</label>
+              <select id="typeInput" name="type" required>
+                <option value="">Select type...</option>
+                <option value="accident">Accident</option>
+                <option value="signal">Signal Malfunction</option>
+                <option value="construction">Road Construction</option>
+                <option value="weather">Weather Impact</option>
+                <option value="obstruction">Road Obstruction</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="descriptionInput">Description</label>
+              <textarea id="descriptionInput" name="description" required></textarea>
+            </div>
+            <button type="submit" class="primary-btn">Report Incident</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>📋 Recent Incidents</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Time</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="incidentsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="reportsSection" class="section">
+        <div class="card">
+          <h2>📈 Traffic Reports</h2>
+          <p style="margin:0; color:var(--muted);">Peak hours: <strong>7-9 AM</strong> and <strong>5-7 PM</strong></p>
+          <p style="margin-top:10px; color:var(--muted);">Average congestion: <strong>35%</strong> of corridors</p>
+          <p style="margin-top:10px; color:var(--muted);">Most affected area: <strong>EDSA North</strong></p>
+          <p style="margin-top:10px; color:var(--muted);">Open incidents: <strong id="reportIncidents">0</strong></p>
+        </div>
+      </section>
+
+      <section id="managementSection" class="section">
+        <div class="card">
+          <h2>👥 User Management</h2>
+          <table>
+            <thead>
+              <tr><th>Username</th><th>Role</th><th>Status</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>admin</td><td>Administrator</td><td><span class="badge green">Active</span></td><td><button class="mini-btn" type="button">Edit</button></td></tr>
+              <tr><td>officer</td><td>Traffic Officer</td><td><span class="badge green">Active</span></td><td><button class="mini-btn" type="button">Edit</button></td></tr>
+              <tr><td>viewer</td><td>Viewer</td><td><span class="badge green">Active</span></td><td><button class="mini-btn" type="button">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>🛣️ Road Management</h2>
+          <table>
+            <thead>
+              <tr><th>Road Name</th><th>Type</th><th>Status</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>EDSA North</td><td>Main Highway</td><td><span class="badge amber">Moderate</span></td><td><button class="mini-btn" type="button">Edit</button></td></tr>
+              <tr><td>Commonwealth Ave</td><td>Secondary Road</td><td><span class="badge green">Good</span></td><td><button class="mini-btn" type="button">Edit</button></td></tr>
+              <tr><td>Quezon Ave</td><td>Main Highway</td><td><span class="badge red">Congested</span></td><td><button class="mini-btn" type="button">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const users = {
+      admin: { name: 'Administrator', permissions: ['dashboard', 'monitoring', 'incidents', 'reports', 'management'] },
+      officer: { name: 'Traffic Officer', permissions: ['dashboard', 'monitoring', 'incidents', 'reports'] },
+      viewer: { name: 'Viewer', permissions: ['dashboard', 'monitoring', 'reports'] }
+    };
+
+    let currentUser = null;
+    const incidents = [
+      { id: 1, location: 'EDSA North - Quezon Avenue', type: 'accident', status: 'active', time: '2:45 PM' },
+      { id: 2, location: 'Commonwealth Ave - Aurora Blvd', type: 'signal', status: 'resolved', time: '1:30 PM' }
+    ];
+
+    const navItems = [
+      { id: 'dashboard', label: '📊 Dashboard', section: 'dashboardSection' },
+      { id: 'monitoring', label: '🛣️ Monitoring', section: 'monitoringSection' },
+      { id: 'incidents', label: '⚠️ Incidents', section: 'incidentsSection' },
+      { id: 'reports', label: '📈 Reports', section: 'reportsSection' },
+      { id: 'management', label: '⚙️ Management', section: 'managementSection' }
+    ];
+
+    const loginForm = document.getElementById('loginForm');
+    const loginSection = document.getElementById('login');
+    const appSection = document.getElementById('app');
+    const navMenu = document.getElementById('navMenu');
+    const userChip = document.getElementById('userChip');
+
+    function renderNav() {
+      navMenu.innerHTML = '';
+      for (const item of navItems) {
+        if (!users[currentUser].permissions.includes(item.id)) continue;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = item.label;
+        btn.dataset.section = item.section;
+        btn.className = item.id === 'dashboard' ? 'active' : '';
+        btn.addEventListener('click', () => showSection(item.section, btn));
+        navMenu.appendChild(btn);
+      }
+    }
+
+    function showSection(sectionId, button) {
+      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+      if (button) button.classList.add('active');
+    }
+
+    function renderMonitoring() {
+      const rows = [
+        { corridor: 'EDSA North', status: 'Moderate', speed: '28 km/h', incidents: 1 },
+        { corridor: 'Commonwealth Ave', status: 'Free Flow', speed: '52 km/h', incidents: 0 },
+        { corridor: 'Quezon Ave', status: 'Congestion', speed: '12 km/h', incidents: 2 },
+        { corridor: 'España Blvd', status: 'Moderate', speed: '35 km/h', incidents: 0 }
+      ];
+      document.getElementById('monitoringTableBody').innerHTML = rows.map(row => {
+        const badgeClass = row.status === 'Free Flow' ? 'green' : row.status === 'Moderate' ? 'amber' : 'red';
+        return `
+          <tr>
+            <td>${row.corridor}</td>
+            <td><span class="badge ${badgeClass}">${row.status}</span></td>
+            <td>${row.speed}</td>
+            <td>${row.incidents}</td>
+            <td><button class="mini-btn" type="button">View</button></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderIncidents() {
+      document.getElementById('incidentsTableBody').innerHTML = incidents.map(item => {
+        const badgeClass = item.status === 'active' ? 'red' : 'green';
+        return `
+          <tr>
+            <td>${item.location}</td>
+            <td>${item.type}</td>
+            <td><span class="badge ${badgeClass}">${item.status}</span></td>
+            <td>${item.time}</td>
+            <td><button class="mini-btn update-incident" type="button" data-id="${item.id}">Update</button></td>
+          </tr>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.update-incident').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = Number(btn.dataset.id);
+          const incident = incidents.find(item => item.id === id);
+          incident.status = incident.status === 'active' ? 'resolved' : 'active';
+          renderIncidents();
+          document.getElementById('reportIncidents').textContent = incidents.filter(i => i.status === 'active').length;
+        });
+      });
+
+      document.getElementById('reportIncidents').textContent = incidents.filter(i => i.status === 'active').length;
+    }
+
+    loginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (users[username] && password === '1234') {
+        currentUser = username;
+        loginSection.classList.add('hidden');
+        appSection.classList.remove('hidden');
+        userChip.textContent = `${users[username].name} (${username})`;
+        renderNav();
+        renderMonitoring();
+        renderIncidents();
+        showSection('dashboardSection', navMenu.querySelector('button'));
+      } else {
+        alert('Invalid username or password. Use the demo user credentials shown below.');
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      currentUser = null;
+      loginSection.classList.remove('hidden');
+      appSection.classList.add('hidden');
+      loginForm.reset();
+    });
+
+    document.getElementById('incidentForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const location = document.getElementById('locationInput').value.trim();
+      const type = document.getElementById('typeInput').value;
+      const description = document.getElementById('descriptionInput').value.trim();
+
+      if (!location || !type || !description) {
+        alert('Please complete all fields.');
+        return;
+      }
+
+      incidents.unshift({
+        id: Date.now(),
+        location,
+        type,
+        status: 'active',
+        time: new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+      });
+
+      event.target.reset();
+      renderIncidents();
+      alert('Incident reported successfully.');
+    });
+
+    document.getElementById('dashGreen').textContent = '8';
+    document.getElementById('dashAmber').textContent = '6';
+    document.getElementById('dashRed').textContent = '4';
+    renderMonitoring();
+    renderIncidents();
+  </script>
+</body>
+</html>
