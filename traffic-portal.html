@@ -6,125 +6,15 @@
   <meta name="description" content="Traffic Portal - Smart Traffic Management">
   <title>Traffic Portal</title>
   <style>
-    :root {
-      --navy: #0f172a;
-      --blue: #2563eb;
-      --blue-dark: #1d4ed8;
-      --bg: #f1f5f9;
-      --line: #e2e8f0;
-      --muted: #64748b;
-      --green: #10b981;
-      --amber: #f59e0b;
-      --red: #ef4444;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--navy);
-    }
-    .login-page {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
-      padding: 24px;
-    }
-    .login-card {
-      width: min(100%, 420px);
-      background: white;
-      border-radius: 18px;
-      padding: 30px 28px;
-      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
-    }
-    .brand { text-align: center; font-size: 52px; margin-bottom: 12px; }
-    h1 { margin: 0; text-align: center; font-size: 28px; }
-    .subtitle { text-align: center; color: var(--muted); margin: 8px 0 24px; }
-    .field { margin-bottom: 18px; }
-    label { display: block; margin-bottom: 8px; font-weight: 700; }
-    input, button { font: inherit; }
-    input {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      font-size: 15px;
-    }
-    button {
-      width: 100%;
-      border: none;
-      background: var(--blue);
-      color: white;
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-    button:hover { background: var(--blue-dark); }
-    .demo { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
-    .demo p { margin: 0 0 12px; font-weight: 700; color: var(--muted); }
-    .demo-item {
-      background: #f8fafc;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 8px 10px;
-      margin-bottom: 10px;
-      color: var(--navy);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    code { background: #e2e8f0; padding: 2px 6px; border-radius: 5px; }
+    :root{--navy:#0f172a;--blue:#2563eb;--blue-dark:#1d4ed8;--bg:#f1f5f9;--line:#e2e8f0;--muted:#64748b}
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:linear-gradient(135deg,#0f172a,#2563eb);color:var(--navy)}.login-page{min-height:100vh;display:grid;place-items:center;padding:24px}.login-card{width:min(100%,420px);padding:30px 28px;background:#fff;border-radius:18px;box-shadow:0 20px 50px #0f172a40}.brand{text-align:center;font-size:52px;margin-bottom:12px}h1{margin:0;text-align:center;font-size:28px}.subtitle{text-align:center;color:var(--muted);margin:8px 0 24px}.field{margin-bottom:18px}label{display:block;margin-bottom:8px;font-weight:700}input,button{font:inherit}input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font-size:15px}button{width:100%;padding:12px 16px;border:0;border-radius:10px;background:var(--blue);color:#fff;font-weight:800;cursor:pointer}button:hover{background:var(--blue-dark)}
   </style>
 </head>
 <body>
-  <div class="login-page">
-    <form id="portalLogin" class="login-card">
-      <div class="brand">🚦</div>
-      <h1>Traffic Portal</h1>
-      <p class="subtitle">Sign in to continue</p>
-
-      <div class="field">
-        <label for="username">Username</label>
-        <input id="username" type="text" placeholder="Enter username" required>
-      </div>
-
-      <div class="field">
-        <label for="password">Password</label>
-        <input id="password" type="password" placeholder="Enter password" required>
-      </div>
-
-      <button type="submit">Sign in</button>
-
-      <div class="demo">
-        <p>Demo users</p>
-        <div class="demo-item"><strong>Admin:</strong> username <code>admin</code> / password <code>1234</code></div>
-        <div class="demo-item"><strong>Officer:</strong> username <code>officer</code> / password <code>1234</code></div>
-        <div class="demo-item"><strong>Viewer:</strong> username <code>viewer</code> / password <code>1234</code></div>
-      </div>
-    </form>
-  </div>
-
+  <div class="login-page"><form id="portalLogin" class="login-card"><div class="brand">🚦</div><h1>Traffic Portal</h1><p class="subtitle">Sign in to continue</p><div class="field"><label for="username">Username</label><input id="username" type="text" autocomplete="username" required></div><div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div><button type="submit">Sign In</button></form></div>
   <script>
-    const users = {
-      admin: { name: 'Administrator' },
-      officer: { name: 'Traffic Officer' },
-      viewer: { name: 'Viewer' }
-    };
-
-    document.getElementById('portalLogin').addEventListener('submit', function (event) {
-      event.preventDefault();
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-
-      if (users[username] && password === '1234') {
-        localStorage.setItem('currentUser', username);
-        alert(`Welcome, ${users[username].name}!\n\nYou are logged in as ${username}.`);
-        window.location.href = 'index.html';
-      } else {
-        alert('Invalid username or password. Please use one of the demo accounts listed below.');
-      }
-    });
+    const users={admin:'Administrator',officer:'Traffic Officer',viewer:'Viewer'};
+    document.getElementById('portalLogin').addEventListener('submit',event=>{event.preventDefault();const username=document.getElementById('username').value.trim();const password=document.getElementById('password').value;if(users[username]&&password==='1234'){localStorage.setItem('currentUser',username);window.location.href='index.html'}else alert('Invalid username or password.');});
   </script>
 </body>
 </html>
