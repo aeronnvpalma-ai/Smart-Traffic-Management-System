@@ -3,18 +3,528 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0; url=./">
-  <title>Redirecting...</title>
+  <meta name="description" content="Smart Traffic Live Map - Real-time traffic conditions">
+  <title>Live Traffic Map - Smart Traffic Management</title>
   <style>
-    body{font-family:Inter,system-ui,sans-serif;background:#f1f5f9;color:#0f172a;display:grid;place-items:center;height:100vh;margin:0}
-    .box{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:24px 32px;box-shadow:0 12px 32px rgba(15,23,42,.08)}
-    a{color:#2563eb;text-decoration:none;font-weight:700}
+    :root {
+      --navy: #0f172a;
+      --blue: #2563eb;
+      --blue-dark: #1d4ed8;
+      --bg: #f1f5f9;
+      --line: #e2e8f0;
+      --muted: #64748b;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--navy);
+    }
+
+    .header {
+      background: white;
+      border-bottom: 1px solid var(--line);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      font-size: 28px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .header-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--navy);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--bg);
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-dark);
+      border-color: var(--blue-dark);
+    }
+
+    .container {
+      display: flex;
+      height: calc(100vh - 70px);
+    }
+
+    .sidebar {
+      width: 280px;
+      background: white;
+      border-right: 1px solid var(--line);
+      padding: 20px;
+      overflow-y: auto;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar-title {
+      margin: 0 0 12px 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-option {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .filter-option input[type="checkbox"] {
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    .filter-option label {
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .status-green {
+      background: var(--green);
+    }
+
+    .status-amber {
+      background: var(--amber);
+    }
+
+    .status-red {
+      background: var(--red);
+    }
+
+    .map-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .corridor-line {
+      transition: stroke 0.3s;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .corridor-line:hover {
+      stroke-width: 4;
+      filter: brightness(1.1);
+      cursor: pointer;
+    }
+
+    .corridor-label {
+      font-size: 12px;
+      font-weight: 600;
+      fill: var(--navy);
+      text-anchor: middle;
+      pointer-events: none;
+      background: white;
+    }
+
+    .tooltip {
+      position: absolute;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      font-size: 13px;
+      z-index: 1000;
+      pointer-events: none;
+      display: none;
+    }
+
+    .tooltip.visible {
+      display: block;
+    }
+
+    .tooltip-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .tooltip-content {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stats-panel {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      min-width: 200px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 13px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        max-height: 150px;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        padding: 12px 20px;
+      }
+
+      .filter-group {
+        margin-bottom: 0;
+        flex-shrink: 0;
+      }
+
+      .stats-panel {
+        bottom: 10px;
+        right: 10px;
+        min-width: 160px;
+        padding: 12px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="box">
-    <p>Redirecting to the Smart Traffic website...</p>
-    <p><a href="./">Open the website</a></p>
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">🗺️</div>
+      <div>
+        <p class="title">Live Traffic Map</p>
+        <p class="subtitle">Real-time corridor status</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-primary" id="refreshBtn" title="Refresh map data">🔄 Refresh</button>
+      <a href="index.html" class="btn" title="Back to dashboard">← Dashboard</a>
+    </div>
   </div>
+
+  <div class="container">
+    <div class="sidebar">
+      <div class="filter-group">
+        <p class="sidebar-title">Filter by Status</p>
+        <div class="filter-option">
+          <input type="checkbox" id="filterGreen" checked>
+          <label for="filterGreen">
+            <span class="status-indicator status-green"></span>
+            Free Flow
+          </label>
+        </div>
+        <div class="filter-option">
+          <input type="checkbox" id="filterAmber" checked>
+          <label for="filterAmber">
+            <span class="status-indicator status-amber"></span>
+            Moderate
+          </label>
+        </div>
+        <div class="filter-option">
+          <input type="checkbox" id="filterRed" checked>
+          <label for="filterRed">
+            <span class="status-indicator status-red"></span>
+            Congestion
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-container">
+      <svg id="mapSvg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="shadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+          </filter>
+        </defs>
+        <g id="corridorsGroup"></g>
+        <g id="labelsGroup"></g>
+      </svg>
+      <div class="tooltip" id="tooltip"></div>
+      <div class="stats-panel" id="statsPanel">
+        <div class="stat-row">
+          <span class="stat-label">Free Flow:</span>
+          <span class="stat-value" id="statGreen">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Moderate:</span>
+          <span class="stat-value" id="statAmber">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Congestion:</span>
+          <span class="stat-value" id="statRed">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const corridors = [
+      { id: 1, name: "EDSA North", x1: 100, y1: 100, x2: 100, y2: 500, status: "free" },
+      { id: 2, name: "EDSA South", x1: 900, y1: 100, x2: 900, y2: 500, status: "moderate" },
+      { id: 3, name: "Commonwealth Ave", x1: 150, y1: 250, x2: 850, y2: 250, status: "free" },
+      { id: 4, name: "Quezon Ave", x1: 200, y1: 150, x2: 800, y2: 350, status: "congested" },
+      { id: 5, name: "España Blvd", x1: 300, y1: 100, x2: 300, y2: 600, status: "moderate" },
+      { id: 6, name: "Aurora Blvd", x1: 600, y1: 150, x2: 600, y2: 550, status: "free" },
+      { id: 7, name: "Morayta St", x1: 100, y1: 400, x2: 900, y2: 400, status: "moderate" },
+      { id: 8, name: "Romualdez St", x1: 200, y1: 500, x2: 800, y2: 300, status: "free" }
+    ];
+
+    const svg = document.getElementById("mapSvg");
+    const corridorsGroup = document.getElementById("corridorsGroup");
+    const labelsGroup = document.getElementById("labelsGroup");
+    const tooltip = document.getElementById("tooltip");
+    const filterGreen = document.getElementById("filterGreen");
+    const filterAmber = document.getElementById("filterAmber");
+    const filterRed = document.getElementById("filterRed");
+    const refreshBtn = document.getElementById("refreshBtn");
+
+    function getStatusColor(status) {
+      switch(status) {
+        case "free": return "#10b981";
+        case "moderate": return "#f59e0b";
+        case "congested": return "#ef4444";
+        default: return "#64748b";
+      }
+    }
+
+    function getStatusLabel(status) {
+      switch(status) {
+        case "free": return "Free Flow";
+        case "moderate": return "Moderate";
+        case "congested": return "Congestion";
+        default: return "Unknown";
+      }
+    }
+
+    function shouldShowCorridor(status) {
+      if (status === "free") return filterGreen.checked;
+      if (status === "moderate") return filterAmber.checked;
+      if (status === "congested") return filterRed.checked;
+      return true;
+    }
+
+    function drawMap() {
+      corridorsGroup.innerHTML = "";
+      labelsGroup.innerHTML = "";
+
+      let stats = { green: 0, amber: 0, red: 0 };
+
+      corridors.forEach(corridor => {
+        if (!shouldShowCorridor(corridor.status)) return;
+
+        const color = getStatusColor(corridor.status);
+        if (corridor.status === "free") stats.green++;
+        else if (corridor.status === "moderate") stats.amber++;
+        else if (corridor.status === "congested") stats.red++;
+
+        // Draw line
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", corridor.x1);
+        line.setAttribute("y1", corridor.y1);
+        line.setAttribute("x2", corridor.x2);
+        line.setAttribute("y2", corridor.y2);
+        line.setAttribute("stroke", color);
+        line.setAttribute("stroke-width", "8");
+        line.setAttribute("class", "corridor-line");
+        line.setAttribute("data-id", corridor.id);
+        line.setAttribute("filter", "url(#shadow)");
+
+        line.addEventListener("mouseover", (e) => showTooltip(corridor, e));
+        line.addEventListener("mousemove", (e) => moveTooltip(e));
+        line.addEventListener("mouseout", hideTooltip);
+        line.addEventListener("click", (e) => handleLineClick(corridor, e));
+
+        corridorsGroup.appendChild(line);
+
+        // Draw label at midpoint
+        const midX = (corridor.x1 + corridor.x2) / 2;
+        const midY = (corridor.y1 + corridor.y2) / 2;
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", midX);
+        text.setAttribute("y", midY);
+        text.setAttribute("class", "corridor-label");
+        text.setAttribute("dy", "-10");
+        text.textContent = corridor.name;
+        labelsGroup.appendChild(text);
+      });
+
+      updateStats(stats);
+    }
+
+    function showTooltip(corridor, e) {
+      const label = getStatusLabel(corridor.status);
+      const avgSpeed = corridor.status === "free" ? 50 : corridor.status === "moderate" ? 25 : 10;
+      tooltip.innerHTML = `
+        <div class="tooltip-title">${corridor.name}</div>
+        <div class="tooltip-content">
+          Status: ${label}<br>
+          Avg Speed: ${avgSpeed} km/h<br>
+          Density: ${corridor.status === "free" ? "Low" : corridor.status === "moderate" ? "Medium" : "High"}
+        </div>
+      `;
+      tooltip.classList.add("visible");
+      moveTooltip(e);
+    }
+
+    function moveTooltip(e) {
+      const rect = svg.getBoundingClientRect();
+      const x = e.clientX - rect.left + 10;
+      const y = e.clientY - rect.top + 10;
+      tooltip.style.left = x + "px";
+      tooltip.style.top = y + "px";
+    }
+
+    function hideTooltip() {
+      tooltip.classList.remove("visible");
+    }
+
+    function handleLineClick(corridor, e) {
+      alert(`${corridor.name}\n\nStatus: ${getStatusLabel(corridor.status)}\nYou can implement incident reporting here.`);
+    }
+
+    function updateStats(stats) {
+      document.getElementById("statGreen").textContent = stats.green;
+      document.getElementById("statAmber").textContent = stats.amber;
+      document.getElementById("statRed").textContent = stats.red;
+    }
+
+    function simulateTrafficChange() {
+      corridors.forEach(corridor => {
+        const rand = Math.random();
+        if (rand < 0.33) corridor.status = "free";
+        else if (rand < 0.66) corridor.status = "moderate";
+        else corridor.status = "congested";
+      });
+      drawMap();
+    }
+
+    filterGreen.addEventListener("change", drawMap);
+    filterAmber.addEventListener("change", drawMap);
+    filterRed.addEventListener("change", drawMap);
+    refreshBtn.addEventListener("click", () => {
+      refreshBtn.style.animation = "spin 0.6s";
+      simulateTrafficChange();
+      setTimeout(() => { refreshBtn.style.animation = ""; }, 600);
+    });
+
+    // Add spin animation
+    const style = document.createElement("style");
+    style.textContent = `
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Initial draw
+    drawMap();
+
+    // Auto-update every 30 seconds
+    setInterval(simulateTrafficChange, 30000);
+  </script>
 </body>
 </html>
